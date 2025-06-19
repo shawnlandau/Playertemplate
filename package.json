@@ -1,34 +1,25 @@
 {
-  "name": "player-profile-template",
+  "name": "player-profile-builder",
   "version": "1.0.0",
-  "description": "A beautiful, customizable template system for creating professional player profiles for young athletes",
-  "main": "template-generator.js",
+  "description": "A visual step-by-step tool for parents to create professional player profiles",
+  "main": "setup-builder.js",
   "scripts": {
-    "start": "node setup.js",
-    "generate": "node template-generator.js",
-    "example:soccer": "node template-generator.js examples/soccer-player-config.json soccer-player.html",
-    "example:basketball": "node template-generator.js examples/basketball-player-config.json basketball-player.html",
-    "test": "node template-generator.js config.json test-output.html"
+    "start": "node setup-builder.js",
+    "build": "node template-generator.js",
+    "dev": "node setup-builder.js"
   },
   "keywords": [
-    "player-profile",
     "sports",
-    "template",
-    "athlete",
-    "portfolio",
+    "player-profile",
+    "recruitment",
+    "coaching",
     "youth-sports"
   ],
-  "author": "Player Profile Template",
+  "author": "Player Profile Builder",
   "license": "MIT",
   "engines": {
     "node": ">=14.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/player-profile-template.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/player-profile-template/issues"
-  },
-  "homepage": "https://github.com/yourusername/player-profile-template#readme"
+  "dependencies": {},
+  "devDependencies": {}
 } 
