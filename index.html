@@ -3,209 +3,516 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JL Player Profile</title>
+    <title>Player Profile Builder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .step-active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        .step-completed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        .step-pending {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-slate-800 text-white p-4 fixed w-full z-50 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-xl font-bold">JL</a>
-            <div class="hidden md:flex space-x-6">
-                <a href="#about" class="hover:text-blue-300 transition-colors">About</a>
-                <a href="#highlights" class="hover:text-blue-300 transition-colors">Highlights</a>
-                <a href="#contact" class="hover:text-blue-300 transition-colors">Contact</a>
-            </div>
-            <button class="md:hidden text-xl" onclick="document.querySelector('.mobile-menu').classList.toggle('hidden')">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-        <!-- Mobile Menu -->
-        <div class="mobile-menu hidden md:hidden bg-slate-800 absolute w-full left-0 p-4">
-            <div class="flex flex-col space-y-4">
-                <a href="#about" class="hover:text-blue-300 transition-colors">About</a>
-                <a href="#highlights" class="hover:text-blue-300 transition-colors">Highlights</a>
-                <a href="#contact" class="hover:text-blue-300 transition-colors">Contact</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="min-h-screen pt-24 md:pt-20 pb-8 bg-gradient-to-r from-slate-800 to-slate-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('images/player.jpg')] bg-cover bg-center opacity-20"></div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="flex flex-col items-center text-center py-12 md:py-20">
-                <h1 class="text-5xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight">
-                    <span class="block text-blue-400">Jared</span>
-                    <span class="block">Landau</span>
-                </h1>
-                <div class="max-w-2xl mx-auto px-4">
-                    <p class="text-lg md:text-2xl mb-6 md:mb-8 leading-relaxed">
-                        A rising star with unmatched passion. <br class="hidden md:block">
-                        Combining raw talent with relentless dedication. <br class="hidden md:block">
-                        Creating excellence through determination and teamwork.
-                    </p>
-                    <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-                        <a href="#contact" class="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition text-base md:text-lg font-semibold">Contact Me</a>
-                        <a href="#highlights" class="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-slate-800 transition text-base md:text-lg font-semibold">Watch Highlights</a>
-                    </div>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-user-circle text-3xl text-blue-600"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Player Profile Builder</h1>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span id="estimated-time">5-10 minutes</span>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- About Section -->
-    <section id="about" class="py-12 md:py-16 bg-white">
-        <div class="container mx-auto px-4 md:px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-800">About Me</h2>
-            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
-                <div>
-                    <p class="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
-                        I'm a passionate baseball player with a love for the game that started at the age of 5. 
-                        My dedication to practice and natural athleticism has helped me excel in multiple positions.
-                    </p>
-                    <p class="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
-                        What sets me apart is my exceptional baseball IQ and deep respect for the game. I study the sport 
-                        constantly, analyzing game situations and learning from every play. My coaches often commend my 
-                        ability to read the game and make smart decisions under pressure.
-                    </p>
-                    <p class="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
-                        I bring grit and determination to every practice and game. Whether it's early morning training 
-                        sessions or late-night fielding practice, I'm always looking for ways to improve. My work ethic 
-                        is unmatched - I believe that success comes from consistent effort and a never-quit attitude.
-                    </p>
-                    <div class="bg-blue-50 p-4 md:p-6 rounded-lg border border-blue-100">
-                        <h3 class="text-lg md:text-xl font-semibold mb-2 md:mb-4 text-blue-800">Current Team</h3>
-                        <p class="text-blue-700 font-medium">The Daily Nine 12U</p>
+    <!-- Progress Bar -->
+    <div class="bg-white border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex space-x-4">
+                    <div id="step-1" class="step-active flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+                        <span class="w-6 h-6 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-sm font-semibold">1</span>
+                        <span class="hidden sm:inline font-medium">Basic Info</span>
+                    </div>
+                    <div id="step-2" class="step-pending flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+                        <span class="w-6 h-6 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-sm font-semibold">2</span>
+                        <span class="hidden sm:inline font-medium">About Player</span>
+                    </div>
+                    <div id="step-3" class="step-pending flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+                        <span class="w-6 h-6 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-sm font-semibold">3</span>
+                        <span class="hidden sm:inline font-medium">Media</span>
+                    </div>
+                    <div id="step-4" class="step-pending flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+                        <span class="w-6 h-6 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-sm font-semibold">4</span>
+                        <span class="hidden sm:inline font-medium">Contact</span>
+                    </div>
+                    <div id="step-5" class="step-pending flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300">
+                        <span class="w-6 h-6 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-sm font-semibold">5</span>
+                        <span class="hidden sm:inline font-medium">Review</span>
                     </div>
                 </div>
-                <div>
-                    <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-slate-800">Positions</h3>
-                    <div class="grid grid-cols-2 gap-4 mb-6 md:mb-8">
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <i class="fas fa-baseball-ball text-blue-600 mb-2 text-xl"></i>
-                            <p class="font-semibold text-blue-800">Shortstop</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div id="step-content" class="max-w-4xl mx-auto">
+            <!-- Step 1: Basic Information -->
+            <div id="step-1-content" class="step-content fade-in">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-user text-4xl text-blue-600 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Basic Information</h2>
+                        <p class="text-gray-600">Let's start with the essential details about your player</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2"></i>First Name *
+                            </label>
+                            <input type="text" id="firstName" name="firstName" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Enter first name">
                         </div>
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <i class="fas fa-baseball-ball text-blue-600 mb-2 text-xl"></i>
-                            <p class="font-semibold text-blue-800">Center Field</p>
+                        <div>
+                            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2"></i>Last Name *
+                            </label>
+                            <input type="text" id="lastName" name="lastName" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Enter last name">
                         </div>
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <i class="fas fa-baseball-ball text-blue-600 mb-2 text-xl"></i>
-                            <p class="font-semibold text-blue-800">Second Base</p>
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-birthday-cake mr-2"></i>Age *
+                            </label>
+                            <input type="number" id="age" name="age" min="5" max="18" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Enter age">
+                        </div>
+                        <div>
+                            <label for="sport" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-running mr-2"></i>Sport *
+                            </label>
+                            <select id="sport" name="sport" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <option value="">Select a sport</option>
+                                <option value="Baseball">Baseball</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Soccer">Soccer</option>
+                                <option value="Football">Football</option>
+                                <option value="Tennis">Tennis</option>
+                                <option value="Swimming">Swimming</option>
+                                <option value="Track & Field">Track & Field</option>
+                                <option value="Volleyball">Volleyball</option>
+                                <option value="Hockey">Hockey</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="currentTeam" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-users mr-2"></i>Current Team
+                            </label>
+                            <input type="text" id="currentTeam" name="currentTeam"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="e.g., The Daily Nine 12U">
+                        </div>
+                        <div>
+                            <label for="startedPlaying" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar mr-2"></i>Started Playing (Age)
+                            </label>
+                            <input type="number" id="startedPlaying" name="startedPlaying" min="1" max="18"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="e.g., 5">
                         </div>
                     </div>
-                    <div class="bg-blue-50 p-4 md:p-6 rounded-lg border border-blue-100">
-                        <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-blue-800">Core Values</h3>
-                        <ul class="space-y-3 md:space-y-4 text-blue-700">
-                            <li class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
-                                <span class="font-medium">Respect for the game and its traditions</span>
+
+                    <div class="mt-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-map-marker-alt mr-2"></i>Positions Played
+                        </label>
+                        <div id="positions-container" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <!-- Positions will be dynamically loaded based on sport -->
+                        </div>
+                        <div class="mt-4">
+                            <button type="button" id="add-position" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                <i class="fas fa-plus mr-1"></i>Add Custom Position
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <div></div>
+                        <button type="button" onclick="nextStep()" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: About Player -->
+            <div id="step-2-content" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-file-alt text-4xl text-blue-600 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">About Your Player</h2>
+                        <p class="text-gray-600">Tell us about your player's story, strengths, and values</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label for="tagline" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-quote-left mr-2"></i>Tagline *
+                            </label>
+                            <textarea id="tagline" name="tagline" rows="3" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="A brief, compelling description of your player (e.g., 'A rising star with unmatched passion. Combining raw talent with relentless dedication.')"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="about1" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-paragraph mr-2"></i>About Paragraph 1 *
+                            </label>
+                            <textarea id="about1" name="about1" rows="4" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Describe your player's passion for the sport and their journey so far..."></textarea>
+                        </div>
+
+                        <div>
+                            <label for="about2" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-paragraph mr-2"></i>About Paragraph 2
+                            </label>
+                            <textarea id="about2" name="about2" rows="4"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="What sets your player apart? Their unique skills, intelligence, or approach to the game..."></textarea>
+                        </div>
+
+                        <div>
+                            <label for="about3" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-paragraph mr-2"></i>About Paragraph 3
+                            </label>
+                            <textarea id="about3" name="about3" rows="4"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Describe their work ethic, dedication, and commitment to improvement..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">
+                                <i class="fas fa-star mr-2"></i>Core Values
+                            </label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value1" name="values" value="Respect for the game and its traditions" class="mr-3">
+                                    <label for="value1" class="text-sm text-gray-700">Respect for the game and its traditions</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value2" name="values" value="Commitment to continuous improvement" class="mr-3">
+                                    <label for="value2" class="text-sm text-gray-700">Commitment to continuous improvement</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value3" name="values" value="Strong work ethic and dedication" class="mr-3">
+                                    <label for="value3" class="text-sm text-gray-700">Strong work ethic and dedication</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value4" name="values" value="Team-first mentality" class="mr-3">
+                                    <label for="value4" class="text-sm text-gray-700">Team-first mentality</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value5" name="values" value="Leadership and communication" class="mr-3">
+                                    <label for="value5" class="text-sm text-gray-700">Leadership and communication</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="value6" name="values" value="Mental toughness and resilience" class="mr-3">
+                                    <label for="value6" class="text-sm text-gray-700">Mental toughness and resilience</label>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <input type="text" id="custom-value" placeholder="Add custom value" 
+                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <button type="button" onclick="addCustomValue()" class="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    <i class="fas fa-plus mr-1"></i>Add Custom Value
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <button type="button" onclick="nextStep()" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Media -->
+            <div id="step-3-content" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-photo-video text-4xl text-blue-600 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Media & Highlights</h2>
+                        <p class="text-gray-600">Add photos and videos to showcase your player's skills</p>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">
+                                <i class="fas fa-image mr-2"></i>Profile Photo
+                            </label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+                                <input type="file" id="profile-photo" accept="image/*" class="hidden">
+                                <div id="photo-upload-area" class="cursor-pointer">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                    <p class="text-gray-600 mb-2">Click to upload a profile photo</p>
+                                    <p class="text-sm text-gray-500">Recommended: Square image, at least 500x500 pixels</p>
+                                </div>
+                                <div id="photo-preview" class="hidden">
+                                    <img id="preview-img" src="" alt="Preview" class="mx-auto max-w-xs rounded-lg shadow-lg">
+                                    <button type="button" onclick="removePhoto()" class="mt-4 text-red-600 hover:text-red-800 text-sm font-medium">
+                                        <i class="fas fa-trash mr-1"></i>Remove Photo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">
+                                <i class="fas fa-video mr-2"></i>Highlight Videos
+                            </label>
+                            <div id="videos-container" class="space-y-4">
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                                    <input type="file" id="video-1" accept="video/*" class="hidden">
+                                    <div class="video-upload-area cursor-pointer">
+                                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+                                        <p class="text-gray-600 mb-2">Click to upload a highlight video</p>
+                                        <p class="text-sm text-gray-500">Supported formats: MP4, MOV, AVI</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addVideoUpload()" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                <i class="fas fa-plus mr-1"></i>Add Another Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <button type="button" onclick="nextStep()" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Contact Information -->
+            <div id="step-4-content" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-address-book text-4xl text-blue-600 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Contact Information</h2>
+                        <p class="text-gray-600">How can coaches and scouts reach you?</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="contactEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-2"></i>Email Address *
+                            </label>
+                            <input type="email" id="contactEmail" name="contactEmail" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="parent@example.com">
+                        </div>
+                        <div>
+                            <label for="contactPhone" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-phone mr-2"></i>Phone Number
+                            </label>
+                            <input type="tel" id="contactPhone" name="contactPhone"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-share-alt mr-2"></i>Social Media (Optional)
+                        </label>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="instagram" class="block text-sm font-medium text-gray-600 mb-2">Instagram</label>
+                                <input type="text" id="instagram" name="instagram"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    placeholder="@username">
+                            </div>
+                            <div>
+                                <label for="twitter" class="block text-sm font-medium text-gray-600 mb-2">Twitter</label>
+                                <input type="text" id="twitter" name="twitter"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    placeholder="@username">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-palette mr-2"></i>Profile Styling
+                        </label>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="primaryColor" class="block text-sm font-medium text-gray-600 mb-2">Primary Color</label>
+                                <select id="primaryColor" name="primaryColor"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="red">Red</option>
+                                    <option value="purple">Purple</option>
+                                    <option value="orange">Orange</option>
+                                    <option value="teal">Teal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="secondaryColor" class="block text-sm font-medium text-gray-600 mb-2">Secondary Color</label>
+                                <select id="secondaryColor" name="secondaryColor"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                    <option value="slate">Slate</option>
+                                    <option value="gray">Gray</option>
+                                    <option value="zinc">Zinc</option>
+                                    <option value="neutral">Neutral</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="accentColor" class="block text-sm font-medium text-gray-600 mb-2">Accent Color</label>
+                                <select id="accentColor" name="accentColor"
+                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                    <option value="blue-400">Blue</option>
+                                    <option value="green-400">Green</option>
+                                    <option value="red-400">Red</option>
+                                    <option value="purple-400">Purple</option>
+                                    <option value="orange-400">Orange</option>
+                                    <option value="teal-400">Teal</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <button type="button" onclick="nextStep()" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            Next Step <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Review & Generate -->
+            <div id="step-5-content" class="step-content hidden">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-check-circle text-4xl text-green-600 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Review Your Profile</h2>
+                        <p class="text-gray-600">Review all the information before generating your player profile</p>
+                    </div>
+
+                    <div id="review-content" class="space-y-6">
+                        <!-- Review content will be populated here -->
+                    </div>
+
+                    <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-4">
+                            <i class="fas fa-info-circle mr-2"></i>What happens next?
+                        </h3>
+                        <ul class="space-y-2 text-blue-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                <span>Your profile will be generated as a professional HTML page</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
-                                <span class="font-medium">Commitment to continuous improvement</span>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                <span>You can download the files and host them anywhere</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
-                                <span class="font-medium">Strong work ethic and dedication</span>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                <span>Share the link with coaches, scouts, and recruiters</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
-                                <span class="font-medium">Team-first mentality</span>
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                <span>Update your profile anytime by running the builder again</span>
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Highlights Section -->
-    <section id="highlights" class="py-12 md:py-16 bg-slate-50">
-        <div class="container mx-auto px-4 md:px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-800">Game Highlights</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                <!-- Video 1 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-xl">
-                    <div class="relative aspect-video">
-                        <video 
-                            class="w-full h-full object-cover"
-                            controls
-                            preload="metadata"
-                            onerror="console.log('Video error:', this.error)">
-                            <source src="videos/IMG_3539.MOV" type="video/quicktime">
-                            <source src="videos/IMG_3539.MOV" type="video/mp4">
-                        </video>
-                    </div>
-                </div>
-
-                <!-- Video 2 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-xl">
-                    <div class="relative aspect-video">
-                        <video 
-                            class="w-full h-full object-cover"
-                            controls
-                            preload="metadata"
-                            onerror="console.log('Video error:', this.error)"
-                            onloadeddata="console.log('Video loaded successfully')">
-                            <source src="videos/IMG_0704.mov" type="video/quicktime">
-                            <source src="videos/IMG_0704.mov" type="video/mp4">
-                            <p class="text-red-500 p-4">If you can't see the video, please try:
-                                <br>1. Refreshing the page
-                                <br>2. Using a different browser
-                                <br>3. Checking the browser console for errors
-                            </p>
-                        </video>
-                    </div>
-                </div>
-
-                <!-- Video 3 (Placeholder) -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-xl">
-                    <div class="relative aspect-video">
-                        <div class="absolute inset-0 flex items-center justify-center bg-slate-100">
-                            <p class="text-slate-600 text-center px-4">
-                                Add your next highlight video here
-                            </p>
-                        </div>
+                    <div class="flex justify-between mt-8">
+                        <button type="button" onclick="prevStep()" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <button type="button" onclick="generateProfile()" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                            <i class="fas fa-magic mr-2"></i>Generate Profile
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-12 md:py-16 bg-white">
-        <div class="container mx-auto px-4 md:px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-800">Get in Touch</h2>
-            <div class="max-w-2xl mx-auto">
-                <form class="space-y-4 md:space-y-6">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                        <input type="text" id="name" name="name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input type="email" id="email" name="email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-base md:text-lg">Send Message</button>
-                    </div>
-                </form>
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8 text-center">
+                <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Profile Generated!</h3>
+                <p class="text-gray-600 mb-6">Your player profile has been successfully created.</p>
+                <div class="space-y-3">
+                    <button onclick="downloadProfile()" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                        <i class="fas fa-download mr-2"></i>Download Files
+                    </button>
+                    <button onclick="previewProfile()" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                        <i class="fas fa-eye mr-2"></i>Preview Profile
+                    </button>
+                    <button onclick="closeModal()" class="w-full bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold">
+                        Close
+                    </button>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-6 md:py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-slate-300">&copy; 2024 Baseball Star. All rights reserved.</p>
-        </div>
-    </footer>
+    <script src="profile-builder.js"></script>
 </body>
 </html> 
