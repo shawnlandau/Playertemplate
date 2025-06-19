@@ -1,0 +1,52 @@
+{
+  "player": {
+    "firstName": "Emma",
+    "lastName": "Rodriguez",
+    "initials": "ER",
+    "age": 14,
+    "sport": "Soccer",
+    "currentTeam": "Strikers FC 14U",
+    "positions": ["Forward", "Midfielder", "Winger"],
+    "startedPlaying": 6,
+    "heroImage": "images/player.jpg"
+  },
+  "content": {
+    "tagline": "A dynamic forward with lightning speed and clinical finishing. Combining technical skill with tactical awareness. Creating opportunities and scoring goals with precision.",
+    "about": {
+      "paragraph1": "I'm a passionate soccer player who discovered my love for the beautiful game at the age of 6. My natural speed and technical ability have helped me excel as a forward and midfielder.",
+      "paragraph2": "What sets me apart is my tactical understanding and ability to read the game. I study professional matches constantly, analyzing movement patterns and learning from the best players. My coaches often commend my vision and ability to create scoring opportunities.",
+      "paragraph3": "I bring intensity and creativity to every training session and match. Whether it's early morning fitness training or evening technical drills, I'm always looking for ways to improve. My work ethic is unmatched - I believe that success comes from consistent practice and a growth mindset."
+    },
+    "coreValues": [
+      "Respect for teammates and opponents",
+      "Commitment to technical excellence",
+      "Strong work ethic and discipline",
+      "Team-first mentality and leadership"
+    ]
+  },
+  "videos": [
+    {
+      "filename": "videos/goal-highlight1.mp4",
+      "title": "Goal Scoring Highlights",
+      "description": "Clinical finishes and goal-scoring opportunities"
+    },
+    {
+      "filename": "videos/assist-highlight2.mp4",
+      "title": "Playmaking Skills",
+      "description": "Key passes and assists for teammates"
+    }
+  ],
+  "contact": {
+    "email": "emma.rodriguez@example.com",
+    "phone": "(555) 987-6543",
+    "socialMedia": {
+      "instagram": "@emma_rodriguez_soccer",
+      "twitter": "@emma_rodriguez_fc"
+    }
+  },
+  "styling": {
+    "primaryColor": "green",
+    "secondaryColor": "slate",
+    "accentColor": "green-400"
+  }
+} 

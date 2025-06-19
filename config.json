@@ -1,0 +1,52 @@
+{
+  "player": {
+    "firstName": "Jared",
+    "lastName": "Landau",
+    "initials": "JL",
+    "age": 12,
+    "sport": "Baseball",
+    "currentTeam": "The Daily Nine 12U",
+    "positions": ["Shortstop", "Center Field", "Second Base"],
+    "startedPlaying": 5,
+    "heroImage": "images/player.jpg"
+  },
+  "content": {
+    "tagline": "A rising star with unmatched passion. Combining raw talent with relentless dedication. Creating excellence through determination and teamwork.",
+    "about": {
+      "paragraph1": "I'm a passionate baseball player with a love for the game that started at the age of 5. My dedication to practice and natural athleticism has helped me excel in multiple positions.",
+      "paragraph2": "What sets me apart is my exceptional baseball IQ and deep respect for the game. I study the sport constantly, analyzing game situations and learning from every play. My coaches often commend my ability to read the game and make smart decisions under pressure.",
+      "paragraph3": "I bring grit and determination to every practice and game. Whether it's early morning training sessions or late-night fielding practice, I'm always looking for ways to improve. My work ethic is unmatched - I believe that success comes from consistent effort and a never-quit attitude."
+    },
+    "coreValues": [
+      "Respect for the game and its traditions",
+      "Commitment to continuous improvement", 
+      "Strong work ethic and dedication",
+      "Team-first mentality"
+    ]
+  },
+  "videos": [
+    {
+      "filename": "videos/IMG_3539.MOV",
+      "title": "Game Highlights 1",
+      "description": "Fielding and batting highlights"
+    },
+    {
+      "filename": "videos/IMG_0704.mov", 
+      "title": "Game Highlights 2",
+      "description": "Pitching and base running"
+    }
+  ],
+  "contact": {
+    "email": "jared.landau@example.com",
+    "phone": "(555) 123-4567",
+    "socialMedia": {
+      "instagram": "@jaredlandau_baseball",
+      "twitter": "@jaredlandau_bb"
+    }
+  },
+  "styling": {
+    "primaryColor": "blue",
+    "secondaryColor": "slate",
+    "accentColor": "blue-400"
+  }
+} 

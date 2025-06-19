@@ -1,0 +1,52 @@
+{
+  "player": {
+    "firstName": "Marcus",
+    "lastName": "Johnson",
+    "initials": "MJ",
+    "age": 16,
+    "sport": "Basketball",
+    "currentTeam": "Thunder Hawks Varsity",
+    "positions": ["Point Guard", "Shooting Guard", "Combo Guard"],
+    "startedPlaying": 8,
+    "heroImage": "images/player.jpg"
+  },
+  "content": {
+    "tagline": "A skilled point guard with court vision and leadership. Combining basketball IQ with athletic ability. Creating plays and leading teammates to victory.",
+    "about": {
+      "paragraph1": "I'm a dedicated basketball player who started playing at the age of 8. My natural court vision and leadership abilities have helped me excel as a point guard and team captain.",
+      "paragraph2": "What sets me apart is my basketball intelligence and ability to control the tempo of the game. I study NBA games constantly, analyzing play patterns and learning from the best point guards. My coaches often commend my decision-making and ability to make my teammates better.",
+      "paragraph3": "I bring leadership and intensity to every practice and game. Whether it's early morning shooting practice or late-night film study, I'm always looking for ways to improve. My work ethic is unmatched - I believe that success comes from preparation and mental toughness."
+    },
+    "coreValues": [
+      "Leadership on and off the court",
+      "Commitment to team success",
+      "Strong work ethic and preparation",
+      "Basketball IQ and decision making"
+    ]
+  },
+  "videos": [
+    {
+      "filename": "videos/playmaking-highlight1.mp4",
+      "title": "Playmaking Highlights",
+      "description": "Assists and court vision displays"
+    },
+    {
+      "filename": "videos/scoring-highlight2.mp4",
+      "title": "Scoring Ability",
+      "description": "Three-point shooting and driving to the basket"
+    }
+  ],
+  "contact": {
+    "email": "marcus.johnson@example.com",
+    "phone": "(555) 456-7890",
+    "socialMedia": {
+      "instagram": "@marcus_johnson_bball",
+      "twitter": "@marcus_johnson_hoops"
+    }
+  },
+  "styling": {
+    "primaryColor": "orange",
+    "secondaryColor": "slate",
+    "accentColor": "orange-400"
+  }
+} 

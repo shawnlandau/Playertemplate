@@ -1,0 +1,34 @@
+{
+  "name": "player-profile-template",
+  "version": "1.0.0",
+  "description": "A beautiful, customizable template system for creating professional player profiles for young athletes",
+  "main": "template-generator.js",
+  "scripts": {
+    "start": "node setup.js",
+    "generate": "node template-generator.js",
+    "example:soccer": "node template-generator.js examples/soccer-player-config.json soccer-player.html",
+    "example:basketball": "node template-generator.js examples/basketball-player-config.json basketball-player.html",
+    "test": "node template-generator.js config.json test-output.html"
+  },
+  "keywords": [
+    "player-profile",
+    "sports",
+    "template",
+    "athlete",
+    "portfolio",
+    "youth-sports"
+  ],
+  "author": "Player Profile Template",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/player-profile-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/player-profile-template/issues"
+  },
+  "homepage": "https://github.com/yourusername/player-profile-template#readme"
+} 
