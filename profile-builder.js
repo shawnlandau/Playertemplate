@@ -27,10 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeBuilder() {
     // Set up sport change listener
     const sportSelect = document.getElementById('sport');
+    console.log('sportSelect element:', sportSelect);
     if (sportSelect) {
         sportSelect.addEventListener('change', function() {
+            console.log('Sport changed to:', this.value);
             updatePositions(this.value);
         });
+    } else {
+        console.log('sportSelect element not found');
     }
 
     // Set up file upload listeners
@@ -74,12 +78,18 @@ function setupVideoUploads() {
 }
 
 function updatePositions(sport) {
+    console.log('updatePositions called with sport:', sport);
     const positionsContainer = document.getElementById('positions-container');
-    if (!positionsContainer) return;
+    if (!positionsContainer) {
+        console.log('positions-container not found');
+        return;
+    }
 
     positionsContainer.innerHTML = '';
     
     const positions = sportPositions[sport] || [];
+    console.log('positions for', sport, ':', positions);
+    
     positions.forEach(position => {
         const div = document.createElement('div');
         div.className = 'flex items-center';
