@@ -14,6 +14,7 @@ const sportPositions = {
     'Track & Field': ['Sprints', 'Distance', 'Hurdles', 'Jumps', 'Throws', 'Relay'],
     'Volleyball': ['Setter', 'Outside Hitter', 'Middle Blocker', 'Opposite Hitter', 'Libero', 'Defensive Specialist'],
     'Hockey': ['Goalie', 'Defenseman', 'Forward', 'Center', 'Winger'],
+    'Lacrosse': ['Attack', 'Midfielder', 'Defense', 'Goalie', 'Face-off Specialist', 'Long-stick Midfielder'],
     'Other': []
 };
 
