@@ -2,6 +2,7 @@
 let currentStep = 1;
 let totalSteps = 5;
 let profileData = {};
+let uploadedImageData = null; // Store uploaded image data
 
 // Sport-specific positions
 const sportPositions = {
@@ -14,7 +15,22 @@ const sportPositions = {
     'Track & Field': ['Sprints', 'Distance', 'Hurdles', 'Jumps', 'Throws', 'Relay'],
     'Volleyball': ['Setter', 'Outside Hitter', 'Middle Blocker', 'Opposite Hitter', 'Libero', 'Defensive Specialist'],
     'Hockey': ['Goalie', 'Defenseman', 'Forward', 'Center', 'Winger'],
-    'Lacrosse': ['Attack', 'Midfielder', 'Defense', 'Goalie', 'Face-off Specialist', 'Long-stick Midfielder'],
+    'Lacrosse': [
+        'Attack', 
+        'Midfielder', 
+        'Defense', 
+        'Goalie', 
+        'Face-off Specialist', 
+        'Long-stick Midfielder (LSM)',
+        'Short-stick Defensive Midfielder (SSDM)',
+        'Wing Midfielder',
+        'Defensive Midfielder',
+        'Offensive Midfielder',
+        'Box Lacrosse - Forward',
+        'Box Lacrosse - Transition',
+        'Box Lacrosse - Defense',
+        'Box Lacrosse - Goalie'
+    ],
     'Other': []
 };
 
@@ -22,6 +38,7 @@ const sportPositions = {
 document.addEventListener('DOMContentLoaded', function() {
     initializeBuilder();
     setupEventListeners();
+    checkForTeamInvite();
 });
 
 function initializeBuilder() {
@@ -39,6 +56,9 @@ function initializeBuilder() {
 
     // Set up file upload listeners
     setupFileUploads();
+    
+    // Set up color selection listeners
+    setupColorListeners();
 }
 
 function setupEventListeners() {
@@ -75,6 +95,44 @@ function setupVideoUploads() {
             videoInput.addEventListener('change', (e) => handleVideoUpload(e, index + 1));
         }
     });
+}
+
+function setupColorListeners() {
+    // Add event listeners for color selection dropdowns
+    const primaryColorSelect = document.getElementById('primaryColor');
+    const secondaryColorSelect = document.getElementById('secondaryColor');
+    const accentColorSelect = document.getElementById('accentColor');
+    
+    if (primaryColorSelect) {
+        primaryColorSelect.addEventListener('change', function() {
+            console.log('Primary color changed to:', this.value);
+            updateColorPreview();
+        });
+    }
+    
+    if (secondaryColorSelect) {
+        secondaryColorSelect.addEventListener('change', function() {
+            console.log('Secondary color changed to:', this.value);
+            updateColorPreview();
+        });
+    }
+    
+    if (accentColorSelect) {
+        accentColorSelect.addEventListener('change', function() {
+            console.log('Accent color changed to:', this.value);
+            updateColorPreview();
+        });
+    }
+}
+
+function updateColorPreview() {
+    // This function can be used to show a live preview of color changes
+    // For now, we'll just log the changes
+    const primaryColor = document.getElementById('primaryColor')?.value || 'blue';
+    const secondaryColor = document.getElementById('secondaryColor')?.value || 'slate';
+    const accentColor = document.getElementById('accentColor')?.value || 'blue-400';
+    
+    console.log('Current color scheme:', { primaryColor, secondaryColor, accentColor });
 }
 
 function updatePositions(sport) {
@@ -150,9 +208,15 @@ function handlePhotoUpload(event) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
+            // Store the image data for use in profile generation
+            uploadedImageData = e.target.result;
+            
+            // Show preview
             document.getElementById('preview-img').src = e.target.result;
             document.getElementById('photo-upload-area').classList.add('hidden');
             document.getElementById('photo-preview').classList.remove('hidden');
+            
+            console.log('Image uploaded and stored for profile generation');
         };
         reader.readAsDataURL(file);
     }
@@ -334,59 +398,51 @@ function populateReviewContent() {
 }
 
 function collectFormData() {
-    const data = {};
+    const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        age: document.getElementById('age').value,
+        sport: document.getElementById('sport').value,
+        currentTeam: document.getElementById('currentTeam').value,
+        startedPlaying: document.getElementById('startedPlaying').value,
+        positions: Array.from(document.querySelectorAll('input[name="positions"]:checked')).map(cb => cb.value),
+        tagline: document.getElementById('tagline').value,
+        about1: document.getElementById('about1').value,
+        about2: document.getElementById('about2').value,
+        about3: document.getElementById('about3').value,
+        values: Array.from(document.querySelectorAll('input[name="values"]:checked')).map(cb => cb.value),
+        contactEmail: document.getElementById('contactEmail').value,
+        contactPhone: document.getElementById('contactPhone').value,
+        instagram: document.getElementById('instagram').value,
+        twitter: document.getElementById('twitter').value,
+        primaryColor: document.getElementById('primaryColor').value,
+        secondaryColor: document.getElementById('secondaryColor').value,
+        accentColor: document.getElementById('accentColor').value
+    };
     
-    // Basic information
-    data.firstName = document.getElementById('firstName').value;
-    data.lastName = document.getElementById('lastName').value;
-    data.age = document.getElementById('age').value;
-    data.sport = document.getElementById('sport').value;
-    data.currentTeam = document.getElementById('currentTeam').value;
-    data.startedPlaying = document.getElementById('startedPlaying').value;
-    
-    // Positions
-    const positionCheckboxes = document.querySelectorAll('input[name="positions"]:checked');
-    data.positions = Array.from(positionCheckboxes).map(cb => cb.value);
-    
-    // About content
-    data.tagline = document.getElementById('tagline').value;
-    data.about1 = document.getElementById('about1').value;
-    data.about2 = document.getElementById('about2').value;
-    data.about3 = document.getElementById('about3').value;
-    
-    // Values
-    const valueCheckboxes = document.querySelectorAll('input[name="values"]:checked');
-    data.values = Array.from(valueCheckboxes).map(cb => cb.value);
-    
-    // Contact information
-    data.contactEmail = document.getElementById('contactEmail').value;
-    data.contactPhone = document.getElementById('contactPhone').value;
-    data.instagram = document.getElementById('instagram').value;
-    data.twitter = document.getElementById('twitter').value;
-    
-    // Styling
-    data.primaryColor = document.getElementById('primaryColor').value;
-    data.secondaryColor = document.getElementById('secondaryColor').value;
-    data.accentColor = document.getElementById('accentColor').value;
-    
-    return data;
+    return formData;
 }
 
 function generateProfile() {
     const formData = collectFormData();
     
-    // Create config object
+    // Create player initials
+    const initials = (formData.firstName.charAt(0) + formData.lastName.charAt(0)).toUpperCase();
+    
+    // Use uploaded image or default
+    const heroImage = uploadedImageData || 'images/player.jpg';
+    
     const config = {
         player: {
             firstName: formData.firstName,
             lastName: formData.lastName,
-            initials: (formData.firstName.charAt(0) + formData.lastName.charAt(0)).toUpperCase(),
-            age: parseInt(formData.age),
+            age: formData.age,
             sport: formData.sport,
             currentTeam: formData.currentTeam,
+            startedPlaying: formData.startedPlaying,
             positions: formData.positions,
-            startedPlaying: parseInt(formData.startedPlaying),
-            heroImage: "images/player.jpg"
+            initials: initials,
+            heroImage: heroImage
         },
         content: {
             tagline: formData.tagline,
@@ -464,6 +520,26 @@ function closeModal() {
 function generateHTML(config) {
     const { player, content, videos, contact, styling } = config;
     
+    // Color mapping for Tailwind classes
+    const colorMap = {
+        'blue': { primary: 'blue', secondary: 'slate', accent: 'blue-400' },
+        'green': { primary: 'green', secondary: 'slate', accent: 'green-400' },
+        'red': { primary: 'red', secondary: 'slate', accent: 'red-400' },
+        'purple': { primary: 'purple', secondary: 'slate', accent: 'purple-400' },
+        'orange': { primary: 'orange', secondary: 'slate', accent: 'orange-400' },
+        'teal': { primary: 'teal', secondary: 'slate', accent: 'teal-400' }
+    };
+    
+    // Get selected colors or default to blue
+    const selectedColors = colorMap[styling.primaryColor] || colorMap.blue;
+    const primaryColor = selectedColors.primary;
+    const secondaryColor = styling.secondaryColor || 'slate';
+    const accentColor = styling.accentColor || selectedColors.accent;
+    
+    // Determine if hero image is a data URL (uploaded) or file path
+    const isDataUrl = player.heroImage && player.heroImage.startsWith('data:');
+    const heroImageUrl = isDataUrl ? player.heroImage : `images/player.jpg`;
+    
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -475,24 +551,24 @@ function generateHTML(config) {
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
-    <nav class="bg-slate-800 text-white p-4 fixed w-full z-50 shadow-lg">
+    <nav class="bg-${secondaryColor}-800 text-white p-4 fixed w-full z-50 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
             <a href="#" class="text-xl font-bold">${player.initials}</a>
             <div class="hidden md:flex space-x-6">
-                <a href="#about" class="hover:text-blue-300 transition-colors">About</a>
-                <a href="#highlights" class="hover:text-blue-300 transition-colors">Highlights</a>
-                <a href="#contact" class="hover:text-blue-300 transition-colors">Contact</a>
+                <a href="#about" class="hover:text-${primaryColor}-300 transition-colors">About</a>
+                <a href="#highlights" class="hover:text-${primaryColor}-300 transition-colors">Highlights</a>
+                <a href="#contact" class="hover:text-${primaryColor}-300 transition-colors">Contact</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="min-h-screen pt-24 md:pt-20 pb-8 bg-gradient-to-r from-slate-800 to-slate-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('${player.heroImage}')] bg-cover bg-center opacity-20"></div>
+    <section class="min-h-screen pt-24 md:pt-20 pb-8 bg-gradient-to-r from-${secondaryColor}-800 to-${secondaryColor}-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('${heroImageUrl}')"></div>
         <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col items-center text-center py-12 md:py-20">
                 <h1 class="text-5xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight">
-                    <span class="block text-blue-400">${player.firstName}</span>
+                    <span class="block text-${accentColor}">${player.firstName}</span>
                     <span class="block">${player.lastName}</span>
                 </h1>
                 <div class="max-w-2xl mx-auto px-4">
@@ -500,8 +576,8 @@ function generateHTML(config) {
                         ${content.tagline}
                     </p>
                     <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-                        <a href="#contact" class="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition text-base md:text-lg font-semibold">Contact Me</a>
-                        <a href="#highlights" class="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-slate-800 transition text-base md:text-lg font-semibold">Watch Highlights</a>
+                        <a href="#contact" class="bg-${primaryColor}-600 text-white px-8 py-3 rounded-full hover:bg-${primaryColor}-700 transition text-base md:text-lg font-semibold">Contact Me</a>
+                        <a href="#highlights" class="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-${secondaryColor}-800 transition text-base md:text-lg font-semibold">Watch Highlights</a>
                     </div>
                 </div>
             </div>
@@ -511,7 +587,7 @@ function generateHTML(config) {
     <!-- About Section -->
     <section id="about" class="py-12 md:py-16 bg-white">
         <div class="container mx-auto px-4 md:px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-800">About Me</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-${secondaryColor}-800">About Me</h2>
             <div class="grid md:grid-cols-2 gap-8 md:gap-12">
                 <div>
                     <p class="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
@@ -527,24 +603,48 @@ function generateHTML(config) {
                         ${content.about.paragraph3}
                     </p>
                     ` : ''}
-                    <div class="bg-blue-50 p-4 md:p-6 rounded-lg border border-blue-100">
-                        <h3 class="text-lg md:text-xl font-semibold mb-2 md:mb-4 text-blue-800">Current Team</h3>
-                        <p class="text-blue-700 font-medium">${player.currentTeam}</p>
+                    <div class="bg-${primaryColor}-50 p-4 md:p-6 rounded-lg border border-${primaryColor}-100">
+                        <h3 class="text-lg md:text-xl font-semibold mb-2 md:mb-4 text-${primaryColor}-800">Current Team</h3>
+                        <p class="text-${primaryColor}-700 font-medium">${player.currentTeam}</p>
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-slate-800">Positions</h3>
+                    <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-${secondaryColor}-800">Positions</h3>
                     <div class="grid grid-cols-2 gap-4 mb-6 md:mb-8">
-                        ${player.positions.map(position => `
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <i class="fas fa-baseball-ball text-blue-600 mb-2 text-xl"></i>
-                            <p class="font-semibold text-blue-800">${position}</p>
-                        </div>
-                        `).join('')}
+                        ${player.positions.map(position => {
+                            // Choose appropriate icon based on sport
+                            let iconClass = 'fas fa-baseball-ball'; // default
+                            if (player.sport === 'Basketball') {
+                                iconClass = 'fas fa-basketball-ball';
+                            } else if (player.sport === 'Soccer') {
+                                iconClass = 'fas fa-futbol';
+                            } else if (player.sport === 'Football') {
+                                iconClass = 'fas fa-football-ball';
+                            } else if (player.sport === 'Tennis') {
+                                iconClass = 'fas fa-table-tennis';
+                            } else if (player.sport === 'Swimming') {
+                                iconClass = 'fas fa-swimming-pool';
+                            } else if (player.sport === 'Track & Field') {
+                                iconClass = 'fas fa-running';
+                            } else if (player.sport === 'Volleyball') {
+                                iconClass = 'fas fa-volleyball-ball';
+                            } else if (player.sport === 'Hockey') {
+                                iconClass = 'fas fa-hockey-puck';
+                            } else if (player.sport === 'Lacrosse') {
+                                iconClass = 'fas fa-hockey-stick';
+                            }
+                            
+                            return `
+                            <div class="bg-${primaryColor}-50 p-4 rounded-lg border border-${primaryColor}-100">
+                                <i class="${iconClass} text-${primaryColor}-600 mb-2 text-xl"></i>
+                                <p class="font-semibold text-${primaryColor}-800">${position}</p>
+                            </div>
+                            `;
+                        }).join('')}
                     </div>
-                    <div class="bg-blue-50 p-4 md:p-6 rounded-lg border border-blue-100">
-                        <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-blue-800">Core Values</h3>
-                        <ul class="space-y-3 md:space-y-4 text-blue-700">
+                    <div class="bg-${primaryColor}-50 p-4 md:p-6 rounded-lg border border-${primaryColor}-100">
+                        <h3 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-${primaryColor}-800">Core Values</h3>
+                        <ul class="space-y-3 md:space-y-4 text-${primaryColor}-700">
                             ${content.coreValues.map(value => `
                             <li class="flex items-center">
                                 <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
@@ -561,31 +661,31 @@ function generateHTML(config) {
     <!-- Contact Section -->
     <section id="contact" class="py-12 md:py-16 bg-white">
         <div class="container mx-auto px-4 md:px-6">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-slate-800">Get in Touch</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-${secondaryColor}-800">Get in Touch</h2>
             <div class="max-w-2xl mx-auto">
-                <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 mb-8">
-                    <h3 class="text-xl font-semibold mb-4 text-blue-800">Contact Information</h3>
+                <div class="bg-${primaryColor}-50 p-6 rounded-lg border border-${primaryColor}-100 mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-${primaryColor}-800">Contact Information</h3>
                     <div class="space-y-3">
                         <p class="flex items-center">
-                            <i class="fas fa-envelope text-blue-600 mr-3"></i>
-                            <a href="mailto:${contact.email}" class="text-blue-700 hover:text-blue-900">${contact.email}</a>
+                            <i class="fas fa-envelope text-${primaryColor}-600 mr-3"></i>
+                            <a href="mailto:${contact.email}" class="text-${primaryColor}-700 hover:text-${primaryColor}-900">${contact.email}</a>
                         </p>
                         ${contact.phone ? `
                         <p class="flex items-center">
-                            <i class="fas fa-phone text-blue-600 mr-3"></i>
-                            <a href="tel:${contact.phone}" class="text-blue-700 hover:text-blue-900">${contact.phone}</a>
+                            <i class="fas fa-phone text-${primaryColor}-600 mr-3"></i>
+                            <a href="tel:${contact.phone}" class="text-${primaryColor}-700 hover:text-${primaryColor}-900">${contact.phone}</a>
                         </p>
                         ` : ''}
                         ${contact.socialMedia.instagram ? `
                         <p class="flex items-center">
-                            <i class="fab fa-instagram text-blue-600 mr-3"></i>
-                            <a href="https://instagram.com/${contact.socialMedia.instagram.replace('@', '')}" class="text-blue-700 hover:text-blue-900">${contact.socialMedia.instagram}</a>
+                            <i class="fab fa-instagram text-${primaryColor}-600 mr-3"></i>
+                            <a href="https://instagram.com/${contact.socialMedia.instagram.replace('@', '')}" class="text-${primaryColor}-700 hover:text-${primaryColor}-900">${contact.socialMedia.instagram}</a>
                         </p>
                         ` : ''}
                         ${contact.socialMedia.twitter ? `
                         <p class="flex items-center">
-                            <i class="fab fa-twitter text-blue-600 mr-3"></i>
-                            <a href="https://twitter.com/${contact.socialMedia.twitter.replace('@', '')}" class="text-blue-700 hover:text-blue-900">${contact.socialMedia.twitter}</a>
+                            <i class="fab fa-twitter text-${primaryColor}-600 mr-3"></i>
+                            <a href="https://twitter.com/${contact.socialMedia.twitter.replace('@', '')}" class="text-${primaryColor}-700 hover:text-${primaryColor}-900">${contact.socialMedia.twitter}</a>
                         </p>
                         ` : ''}
                     </div>
@@ -595,4 +695,52 @@ function generateHTML(config) {
     </section>
 </body>
 </html>`;
+}
+
+// Function to check for team invite when profile builder loads
+function checkForTeamInvite() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const teamCode = urlParams.get('team');
+    
+    if (teamCode) {
+        // Load teams from localStorage
+        const savedTeams = localStorage.getItem('teams');
+        if (savedTeams) {
+            const teams = JSON.parse(savedTeams);
+            const team = teams.find(t => t.inviteCode === teamCode);
+            
+            if (team) {
+                // Pre-fill the current team field in the profile builder
+                const currentTeamField = document.getElementById('currentTeam');
+                if (currentTeamField) {
+                    currentTeamField.value = team.name;
+                    currentTeamField.readOnly = true;
+                    
+                    // Show a message that they're creating a profile for this team
+                    showTeamInviteMessage(team);
+                }
+            }
+        }
+    }
+}
+
+function showTeamInviteMessage(team) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6';
+    messageDiv.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-users text-blue-600 mr-3 text-xl"></i>
+            <div>
+                <h3 class="font-semibold text-blue-800">Creating Profile for ${team.name}</h3>
+                <p class="text-blue-700 text-sm">You're creating a player profile for ${team.sport} team ${team.name} (${team.ageGroup}, ${team.level})</p>
+            </div>
+        </div>
+    `;
+    
+    // Insert at the top of the first step content
+    const firstStepContent = document.getElementById('step-1-content');
+    if (firstStepContent) {
+        const stepContent = firstStepContent.querySelector('.step-content') || firstStepContent;
+        stepContent.insertBefore(messageDiv, stepContent.firstChild);
+    }
 } 

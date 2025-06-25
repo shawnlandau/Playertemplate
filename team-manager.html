@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Manager - Player Profile Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-users text-3xl text-blue-600"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Team Manager</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="profile-builder.html" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        <i class="fas fa-user-plus mr-1"></i>Create Player Profile
+                    </a>
+                    <a href="index.html" class="text-gray-600 hover:text-gray-800 text-sm font-medium">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Team Creation Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8 fade-in">
+                <div class="text-center mb-8">
+                    <i class="fas fa-plus-circle text-4xl text-blue-600 mb-4"></i>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Create New Team</h2>
+                    <p class="text-gray-600">Set up a team and invite players to create their profiles</p>
+                </div>
+
+                <form id="team-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="teamName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-trophy mr-2"></i>Team Name *
+                            </label>
+                            <input type="text" id="teamName" name="teamName" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="e.g., Thunder Hawks 14U">
+                        </div>
+                        <div>
+                            <label for="teamSport" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-running mr-2"></i>Sport *
+                            </label>
+                            <select id="teamSport" name="teamSport" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <option value="">Select a sport</option>
+                                <option value="Baseball">Baseball</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Football">Football</option>
+                                <option value="Hockey">Hockey</option>
+                                <option value="Lacrosse">Lacrosse</option>
+                                <option value="Soccer">Soccer</option>
+                                <option value="Swimming">Swimming</option>
+                                <option value="Tennis">Tennis</option>
+                                <option value="Track & Field">Track & Field</option>
+                                <option value="Volleyball">Volleyball</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="teamAge" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-users mr-2"></i>Age Group *
+                            </label>
+                            <select id="teamAge" name="teamAge" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <option value="">Select age group</option>
+                                <option value="8U">8U (Under 8)</option>
+                                <option value="10U">10U (Under 10)</option>
+                                <option value="12U">12U (Under 12)</option>
+                                <option value="14U">14U (Under 14)</option>
+                                <option value="16U">16U (Under 16)</option>
+                                <option value="18U">18U (Under 18)</option>
+                                <option value="High School">High School</option>
+                                <option value="College">College</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="teamLevel" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-star mr-2"></i>Competition Level *
+                            </label>
+                            <select id="teamLevel" name="teamLevel" required
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                <option value="">Select level</option>
+                                <option value="Recreational">Recreational</option>
+                                <option value="Competitive">Competitive</option>
+                                <option value="Elite">Elite</option>
+                                <option value="Travel">Travel</option>
+                                <option value="School">School</option>
+                                <option value="Club">Club</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="teamDescription" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-file-alt mr-2"></i>Team Description
+                        </label>
+                        <textarea id="teamDescription" name="teamDescription" rows="4"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            placeholder="Describe your team, goals, and what you're looking for in players..."></textarea>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="coachName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user-tie mr-2"></i>Coach Name
+                            </label>
+                            <input type="text" id="coachName" name="coachName"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="Head coach name">
+                        </div>
+                        <div>
+                            <label for="coachEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-2"></i>Coach Email
+                            </label>
+                            <input type="email" id="coachEmail" name="coachEmail"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                placeholder="coach@example.com">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            <i class="fas fa-plus mr-2"></i>Create Team
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Teams List Section -->
+            <div id="teams-section" class="bg-white rounded-lg shadow-lg p-8 fade-in">
+                <div class="text-center mb-8">
+                    <i class="fas fa-list text-4xl text-green-600 mb-4"></i>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Your Teams</h2>
+                    <p class="text-gray-600">Manage your teams and invite players</p>
+                </div>
+
+                <div id="teams-list" class="space-y-6">
+                    <!-- Teams will be dynamically loaded here -->
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-users text-4xl mb-4"></i>
+                        <p>No teams created yet. Create your first team above!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Invite Modal -->
+    <div id="invite-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Invite Players to <span id="modal-team-name"></span></h3>
+                    <button onclick="closeInviteModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Invite Link</label>
+                        <div class="flex">
+                            <input type="text" id="invite-link" readonly
+                                class="flex-1 px-4 py-3 rounded-l-lg border border-gray-300 bg-gray-50 text-gray-600">
+                            <button onclick="copyInviteLink()" class="bg-blue-600 text-white px-4 py-3 rounded-r-lg hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">Share this link with players to invite them to create profiles for your team</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Team Information</label>
+                        <div id="team-info" class="bg-gray-50 p-4 rounded-lg">
+                            <!-- Team info will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button onclick="closeInviteModal()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                            Close
+                        </button>
+                        <button onclick="shareInviteLink()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-share mr-2"></i>Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="team-manager.js"></script>
+</body>
+</html> 
