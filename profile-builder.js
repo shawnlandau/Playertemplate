@@ -3,6 +3,153 @@ let currentStep = 1;
 let totalSteps = 5;
 let profileData = {};
 let uploadedImageData = null; // Store uploaded image data
+let uploadedVideos = []; // Store uploaded video data
+
+// USABL Teams by Age Group
+const usablTeams = {
+    '9U': [
+        '9U Red Sox',
+        '9U Yankees',
+        '9U Dodgers',
+        '9U Giants',
+        '9U Braves',
+        '9U Cardinals',
+        '9U Cubs',
+        '9U Mets',
+        '9U Phillies',
+        '9U Nationals',
+        '9U Marlins',
+        '9U Pirates',
+        '9U Rockies',
+        '9U Diamondbacks',
+        '9U Padres',
+        '9U Brewers',
+        '9U Reds',
+        '9U Astros',
+        '9U Rangers',
+        '9U Angels',
+        '9U Athletics',
+        '9U Mariners',
+        '9U Royals',
+        '9U Twins',
+        '9U White Sox',
+        '9U Tigers',
+        '9U Indians',
+        '9U Rays',
+        '9U Blue Jays',
+        '9U Orioles'
+    ],
+    '10U': [
+        '10U Red Sox',
+        '10U Yankees',
+        '10U Dodgers',
+        '10U Giants',
+        '10U Braves',
+        '10U Cardinals',
+        '10U Cubs',
+        '10U Mets',
+        '10U Phillies',
+        '10U Nationals',
+        '10U Marlins',
+        '10U Pirates',
+        '10U Rockies',
+        '10U Diamondbacks',
+        '10U Padres',
+        '10U Brewers',
+        '10U Reds',
+        '10U Astros',
+        '10U Rangers',
+        '10U Angels',
+        '10U Athletics',
+        '10U Mariners',
+        '10U Royals',
+        '10U Twins',
+        '10U White Sox',
+        '10U Tigers',
+        '10U Indians',
+        '10U Rays',
+        '10U Blue Jays',
+        '10U Orioles'
+    ],
+    '11U': [
+        '11U Red Sox',
+        '11U Yankees',
+        '11U Dodgers',
+        '11U Giants',
+        '11U Braves',
+        '11U Cardinals',
+        '11U Cubs',
+        '11U Mets',
+        '11U Phillies',
+        '11U Nationals',
+        '11U Marlins',
+        '11U Pirates',
+        '11U Rockies',
+        '11U Diamondbacks',
+        '11U Padres',
+        '11U Brewers',
+        '11U Reds',
+        '11U Astros',
+        '11U Rangers',
+        '11U Angels',
+        '11U Athletics',
+        '11U Mariners',
+        '11U Royals',
+        '11U Twins',
+        '11U White Sox',
+        '11U Tigers',
+        '11U Indians',
+        '11U Rays',
+        '11U Blue Jays',
+        '11U Orioles'
+    ],
+    '12U': [
+        '12U Red Sox',
+        '12U Yankees',
+        '12U Dodgers',
+        '12U Giants',
+        '12U Braves',
+        '12U Cardinals',
+        '12U Cubs',
+        '12U Mets',
+        '12U Phillies',
+        '12U Nationals',
+        '12U Marlins',
+        '12U Pirates',
+        '12U Rockies',
+        '12U Diamondbacks',
+        '12U Padres',
+        '12U Brewers',
+        '12U Reds',
+        '12U Astros',
+        '12U Rangers',
+        '12U Angels',
+        '12U Athletics',
+        '12U Mariners',
+        '12U Royals',
+        '12U Twins',
+        '12U White Sox',
+        '12U Tigers',
+        '12U Indians',
+        '12U Rays',
+        '12U Blue Jays',
+        '12U Orioles'
+    ]
+};
+
+// Supported video formats
+const supportedVideoFormats = [
+    'video/mp4',
+    'video/quicktime',
+    'video/x-msvideo',
+    'video/webm',
+    'video/ogg',
+    'video/mov',
+    'video/avi',
+    'video/wmv',
+    'video/flv',
+    'video/m4v'
+];
 
 // Sport-specific positions
 const sportPositions = {
@@ -54,9 +201,14 @@ function initializeBuilder() {
         console.log('sportSelect element not found');
     }
 
-    // Set up file upload listeners
-    setupFileUploads();
-    
+    // Set up age change listener for team options
+    const ageInput = document.getElementById('age');
+    if (ageInput) {
+        ageInput.addEventListener('input', function() {
+            updateTeamOptions();
+        });
+    }
+
     // Set up color selection listeners
     setupColorListeners();
 }
@@ -123,6 +275,16 @@ function setupColorListeners() {
             updateColorPreview();
         });
     }
+    
+    // Background opacity slider
+    const backgroundOpacitySlider = document.getElementById('backgroundOpacity');
+    const opacityValueDisplay = document.getElementById('opacityValue');
+    
+    if (backgroundOpacitySlider && opacityValueDisplay) {
+        backgroundOpacitySlider.addEventListener('input', function() {
+            opacityValueDisplay.textContent = this.value + '%';
+        });
+    }
 }
 
 function updateColorPreview() {
@@ -161,6 +323,69 @@ function updatePositions(sport) {
     });
 }
 
+function updateTeamOptions() {
+    const ageInput = document.getElementById('age');
+    const currentTeamInput = document.getElementById('currentTeam');
+    const teamDropdown = document.getElementById('team-dropdown');
+    
+    if (!ageInput || !currentTeamInput || !teamDropdown) return;
+    
+    const age = parseInt(ageInput.value);
+    let ageGroup = '';
+    
+    // Determine age group
+    if (age >= 9 && age <= 12) {
+        ageGroup = age + 'U';
+    } else {
+        // Clear dropdown if age is outside 9U-12U range
+        teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
+        return;
+    }
+    
+    // Get teams for this age group
+    const teams = usablTeams[ageGroup] || [];
+    
+    // Update dropdown
+    teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
+    teams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team;
+        option.textContent = team;
+        teamDropdown.appendChild(option);
+    });
+    
+    // Show/hide team selection based on age
+    const teamSelectionContainer = document.getElementById('team-selection-container');
+    if (teamSelectionContainer) {
+        if (age >= 9 && age <= 12) {
+            teamSelectionContainer.classList.remove('hidden');
+        } else {
+            teamSelectionContainer.classList.add('hidden');
+        }
+    }
+}
+
+function selectTeamFromDropdown() {
+    const teamDropdown = document.getElementById('team-dropdown');
+    const currentTeamInput = document.getElementById('currentTeam');
+    
+    if (teamDropdown && currentTeamInput) {
+        currentTeamInput.value = teamDropdown.value;
+    }
+}
+
+function clearTeamSelection() {
+    const currentTeamInput = document.getElementById('currentTeam');
+    const teamDropdown = document.getElementById('team-dropdown');
+    
+    if (currentTeamInput) {
+        currentTeamInput.value = '';
+    }
+    if (teamDropdown) {
+        teamDropdown.value = '';
+    }
+}
+
 function addCustomValue() {
     const customValueInput = document.getElementById('custom-value');
     const value = customValueInput.value.trim();
@@ -189,7 +414,23 @@ function addVideoUpload() {
         <div class="video-upload-area cursor-pointer">
             <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
             <p class="text-gray-600 mb-2">Click to upload a highlight video</p>
-            <p class="text-sm text-gray-500">Supported formats: MP4, MOV, AVI</p>
+            <p class="text-sm text-gray-500">Supported formats: MP4, MOV, AVI, WebM, WMV, FLV, M4V</p>
+        </div>
+        <div class="video-preview hidden mt-4">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-video text-green-600 mr-3"></i>
+                        <div>
+                            <p class="font-medium text-green-800 video-filename"></p>
+                            <p class="text-sm text-green-600 video-size"></p>
+                        </div>
+                    </div>
+                    <button type="button" class="text-red-600 hover:text-red-800" onclick="removeVideo(${videoCount})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     `;
     
@@ -225,13 +466,77 @@ function handlePhotoUpload(event) {
 function handleVideoUpload(event, videoIndex) {
     const file = event.target.files[0];
     if (file) {
+        // Check if file is a supported video format
+        if (!supportedVideoFormats.includes(file.type) && !file.name.match(/\.(mp4|mov|avi|webm|wmv|flv|m4v)$/i)) {
+            alert('Please select a supported video format: MP4, MOV, AVI, WebM, WMV, FLV, or M4V');
+            event.target.value = '';
+            return;
+        }
+        
+        // Check file size (limit to 100MB)
+        const maxSize = 100 * 1024 * 1024; // 100MB
+        if (file.size > maxSize) {
+            alert('Video file is too large. Please select a file smaller than 100MB.');
+            event.target.value = '';
+            return;
+        }
+        
         const uploadArea = event.target.parentElement.querySelector('.video-upload-area');
-        uploadArea.innerHTML = `
-            <i class="fas fa-check-circle text-3xl text-green-500 mb-3"></i>
-            <p class="text-green-600 mb-2">Video uploaded successfully!</p>
-            <p class="text-sm text-gray-500">${file.name}</p>
-        `;
+        const previewArea = event.target.parentElement.querySelector('.video-preview');
+        const filenameElement = previewArea.querySelector('.video-filename');
+        const sizeElement = previewArea.querySelector('.video-size');
+        
+        // Store video data
+        const videoData = {
+            file: file,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            index: videoIndex
+        };
+        
+        // Update or add to uploadedVideos array
+        const existingIndex = uploadedVideos.findIndex(v => v.index === videoIndex);
+        if (existingIndex >= 0) {
+            uploadedVideos[existingIndex] = videoData;
+        } else {
+            uploadedVideos.push(videoData);
+        }
+        
+        // Show preview
+        filenameElement.textContent = file.name;
+        sizeElement.textContent = formatFileSize(file.size);
+        
+        uploadArea.classList.add('hidden');
+        previewArea.classList.remove('hidden');
+        
+        console.log(`Video ${videoIndex} uploaded:`, file.name, formatFileSize(file.size));
     }
+}
+
+function removeVideo(videoIndex) {
+    // Remove from uploadedVideos array
+    uploadedVideos = uploadedVideos.filter(v => v.index !== videoIndex);
+    
+    // Reset the upload area
+    const videoDiv = document.getElementById(`video-${videoIndex}`).parentElement;
+    const uploadArea = videoDiv.querySelector('.video-upload-area');
+    const previewArea = videoDiv.querySelector('.video-preview');
+    const fileInput = document.getElementById(`video-${videoIndex}`);
+    
+    fileInput.value = '';
+    uploadArea.classList.remove('hidden');
+    previewArea.classList.add('hidden');
+    
+    console.log(`Video ${videoIndex} removed`);
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 function removePhoto() {
@@ -334,6 +639,9 @@ function populateReviewContent() {
                     <p><strong>Age:</strong> ${formData.age}</p>
                     <p><strong>Sport:</strong> ${formData.sport}</p>
                     <p><strong>Team:</strong> ${formData.currentTeam || 'Not specified'}</p>
+                    ${parseInt(formData.age) >= 9 && parseInt(formData.age) <= 12 ? `
+                    <p><strong>USABL Age Group:</strong> ${formData.age}U</p>
+                    ` : ''}
                     <p><strong>Started Playing:</strong> Age ${formData.startedPlaying || 'Not specified'}</p>
                     <p><strong>Positions:</strong> ${formData.positions.join(', ') || 'None selected'}</p>
                 </div>
@@ -392,6 +700,28 @@ function populateReviewContent() {
                 <p><strong>Primary Color:</strong> ${formData.primaryColor}</p>
                 <p><strong>Secondary Color:</strong> ${formData.secondaryColor}</p>
                 <p><strong>Accent Color:</strong> ${formData.accentColor}</p>
+                <p><strong>Background Opacity:</strong> ${formData.backgroundOpacity}%</p>
+            </div>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-photo-video mr-2"></i>Media
+            </h3>
+            <div class="space-y-3 text-sm">
+                <div>
+                    <strong>Profile Photo:</strong>
+                    <p class="text-gray-700 mt-1">${uploadedImageData ? 'Uploaded ✓' : 'Using default image'}</p>
+                </div>
+                <div>
+                    <strong>Highlight Videos:</strong>
+                    ${uploadedVideos.length > 0 ? 
+                        uploadedVideos.map((video, index) => `
+                            <p class="text-gray-700 mt-1">• ${video.name} (${formatFileSize(video.size)})</p>
+                        `).join('') : 
+                        '<p class="text-gray-700 mt-1">No videos uploaded</p>'
+                    }
+                </div>
             </div>
         </div>
     `;
@@ -417,7 +747,8 @@ function collectFormData() {
         twitter: document.getElementById('twitter').value,
         primaryColor: document.getElementById('primaryColor').value,
         secondaryColor: document.getElementById('secondaryColor').value,
-        accentColor: document.getElementById('accentColor').value
+        accentColor: document.getElementById('accentColor').value,
+        backgroundOpacity: document.getElementById('backgroundOpacity').value
     };
     
     return formData;
@@ -453,18 +784,13 @@ function generateProfile() {
             },
             coreValues: formData.values
         },
-        videos: [
-            {
-                filename: "videos/IMG_3539.MOV",
-                title: "Game Highlights 1",
-                description: "Fielding and batting highlights"
-            },
-            {
-                filename: "videos/IMG_0704.mov",
-                title: "Game Highlights 2", 
-                description: "Pitching and base running"
-            }
-        ],
+        videos: uploadedVideos.map((video, index) => ({
+            filename: video.name,
+            title: `Highlight Video ${index + 1}`,
+            description: `${video.name} (${formatFileSize(video.size)})`,
+            file: video.file,
+            type: video.type
+        })),
         contact: {
             email: formData.contactEmail,
             phone: formData.contactPhone,
@@ -476,7 +802,8 @@ function generateProfile() {
         styling: {
             primaryColor: formData.primaryColor,
             secondaryColor: formData.secondaryColor,
-            accentColor: formData.accentColor
+            accentColor: formData.accentColor,
+            backgroundOpacity: formData.backgroundOpacity
         }
     };
     
@@ -535,6 +862,7 @@ function generateHTML(config) {
     const primaryColor = selectedColors.primary;
     const secondaryColor = styling.secondaryColor || 'slate';
     const accentColor = styling.accentColor || selectedColors.accent;
+    const backgroundOpacity = styling.backgroundOpacity || '40';
     
     // Determine if hero image is a data URL (uploaded) or file path
     const isDataUrl = player.heroImage && player.heroImage.startsWith('data:');
@@ -564,20 +892,21 @@ function generateHTML(config) {
 
     <!-- Hero Section -->
     <section class="min-h-screen pt-24 md:pt-20 pb-8 bg-gradient-to-r from-${secondaryColor}-800 to-${secondaryColor}-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('${heroImageUrl}')"></div>
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${heroImageUrl}'); background-position: center 20%; opacity: ${backgroundOpacity}%;"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-${secondaryColor}-800/80 to-${secondaryColor}-900/80"></div>
         <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col items-center text-center py-12 md:py-20">
-                <h1 class="text-5xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight drop-shadow-lg">
                     <span class="block text-${accentColor}">${player.firstName}</span>
                     <span class="block">${player.lastName}</span>
                 </h1>
                 <div class="max-w-2xl mx-auto px-4">
-                    <p class="text-lg md:text-2xl mb-6 md:mb-8 leading-relaxed">
+                    <p class="text-lg md:text-2xl mb-6 md:mb-8 leading-relaxed drop-shadow-md">
                         ${content.tagline}
                     </p>
                     <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-                        <a href="#contact" class="bg-${primaryColor}-600 text-white px-8 py-3 rounded-full hover:bg-${primaryColor}-700 transition text-base md:text-lg font-semibold">Contact Me</a>
-                        <a href="#highlights" class="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-${secondaryColor}-800 transition text-base md:text-lg font-semibold">Watch Highlights</a>
+                        <a href="#contact" class="bg-${primaryColor}-600 text-white px-8 py-3 rounded-full hover:bg-${primaryColor}-700 transition text-base md:text-lg font-semibold shadow-lg">Contact Me</a>
+                        <a href="#highlights" class="border-2 border-white px-8 py-3 rounded-full hover:bg-white hover:text-${secondaryColor}-800 transition text-base md:text-lg font-semibold shadow-lg">Watch Highlights</a>
                     </div>
                 </div>
             </div>
