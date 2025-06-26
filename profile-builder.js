@@ -201,10 +201,10 @@ function initializeBuilder() {
         console.log('sportSelect element not found');
     }
 
-    // Set up age change listener for team options
-    const ageInput = document.getElementById('age');
-    if (ageInput) {
-        ageInput.addEventListener('input', function() {
+    // Set up birthdate change listener for team options
+    const birthdateInput = document.getElementById('birthdate');
+    if (birthdateInput) {
+        birthdateInput.addEventListener('input', function() {
             updateTeamOptions();
         });
     }
@@ -323,29 +323,36 @@ function updatePositions(sport) {
     });
 }
 
+function calculateUSABLDivision(birthdate) {
+    if (!birthdate) return null;
+    const now = new Date();
+    const cutoff = new Date(now.getFullYear(), 3, 30); // April 30th of current year
+    const birth = new Date(birthdate);
+    let age = cutoff.getFullYear() - birth.getFullYear();
+    const monthDiff = cutoff.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && cutoff.getDate() < birth.getDate())) {
+        age--;
+    }
+    return age;
+}
+
 function updateTeamOptions() {
-    const ageInput = document.getElementById('age');
+    const birthdateInput = document.getElementById('birthdate');
     const currentTeamInput = document.getElementById('currentTeam');
     const teamDropdown = document.getElementById('team-dropdown');
-    
-    if (!ageInput || !currentTeamInput || !teamDropdown) return;
-    
-    const age = parseInt(ageInput.value);
+    if (!birthdateInput || !currentTeamInput || !teamDropdown) return;
+    const usablAge = calculateUSABLDivision(birthdateInput.value);
+    if (usablAge === null) return;
     let ageGroup = '';
-    
-    // Determine age group
-    if (age >= 9 && age <= 12) {
-        ageGroup = age + 'U';
+    if (usablAge >= 9 && usablAge <= 12) {
+        ageGroup = usablAge + 'U';
     } else {
-        // Clear dropdown if age is outside 9U-12U range
         teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
+        const teamSelectionContainer = document.getElementById('team-selection-container');
+        if (teamSelectionContainer) teamSelectionContainer.classList.add('hidden');
         return;
     }
-    
-    // Get teams for this age group
     const teams = usablTeams[ageGroup] || [];
-    
-    // Update dropdown
     teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
     teams.forEach(team => {
         const option = document.createElement('option');
@@ -353,15 +360,9 @@ function updateTeamOptions() {
         option.textContent = team;
         teamDropdown.appendChild(option);
     });
-    
-    // Show/hide team selection based on age
     const teamSelectionContainer = document.getElementById('team-selection-container');
     if (teamSelectionContainer) {
-        if (age >= 9 && age <= 12) {
-            teamSelectionContainer.classList.remove('hidden');
-        } else {
-            teamSelectionContainer.classList.add('hidden');
-        }
+        teamSelectionContainer.classList.remove('hidden');
     }
 }
 
@@ -636,13 +637,13 @@ function populateReviewContent() {
                 </h3>
                 <div class="space-y-2 text-sm">
                     <p><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
-                    <p><strong>Age:</strong> ${formData.age}</p>
+                    <p><strong>Birth Date:</strong> ${formData.birthdate ? new Date(formData.birthdate).toLocaleDateString() : 'Not specified'}</p>
+                    <p><strong>USABL Age (as of April 30):</strong> ${formData.age || 'Not specified'}</p>
                     <p><strong>Sport:</strong> ${formData.sport}</p>
                     <p><strong>Team:</strong> ${formData.currentTeam || 'Not specified'}</p>
-                    ${parseInt(formData.age) >= 9 && parseInt(formData.age) <= 12 ? `
+                    ${formData.age >= 9 && formData.age <= 12 ? `
                     <p><strong>USABL Age Group:</strong> ${formData.age}U</p>
                     ` : ''}
-                    <p><strong>Started Playing:</strong> Age ${formData.startedPlaying || 'Not specified'}</p>
                     <p><strong>Positions:</strong> ${formData.positions.join(', ') || 'None selected'}</p>
                 </div>
             </div>
@@ -728,13 +729,16 @@ function populateReviewContent() {
 }
 
 function collectFormData() {
+    const birthdate = document.getElementById('birthdate').value;
+    const calculatedAge = calculateUSABLDivision(birthdate);
+    
     const formData = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
-        age: document.getElementById('age').value,
+        birthdate: birthdate,
+        age: calculatedAge,
         sport: document.getElementById('sport').value,
         currentTeam: document.getElementById('currentTeam').value,
-        startedPlaying: document.getElementById('startedPlaying').value,
         positions: Array.from(document.querySelectorAll('input[name="positions"]:checked')).map(cb => cb.value),
         tagline: document.getElementById('tagline').value,
         about1: document.getElementById('about1').value,
@@ -767,10 +771,10 @@ function generateProfile() {
         player: {
             firstName: formData.firstName,
             lastName: formData.lastName,
+            birthdate: formData.birthdate,
             age: formData.age,
             sport: formData.sport,
             currentTeam: formData.currentTeam,
-            startedPlaying: formData.startedPlaying,
             positions: formData.positions,
             initials: initials,
             heroImage: heroImage
