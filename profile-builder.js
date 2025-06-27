@@ -5,137 +5,8 @@ let profileData = {};
 let uploadedImageData = null; // Store uploaded image data
 let uploadedVideos = []; // Store uploaded video data
 
-// USABL Teams by Age Group
-const usablTeams = {
-    '9U': [
-        '9U Red Sox',
-        '9U Yankees',
-        '9U Dodgers',
-        '9U Giants',
-        '9U Braves',
-        '9U Cardinals',
-        '9U Cubs',
-        '9U Mets',
-        '9U Phillies',
-        '9U Nationals',
-        '9U Marlins',
-        '9U Pirates',
-        '9U Rockies',
-        '9U Diamondbacks',
-        '9U Padres',
-        '9U Brewers',
-        '9U Reds',
-        '9U Astros',
-        '9U Rangers',
-        '9U Angels',
-        '9U Athletics',
-        '9U Mariners',
-        '9U Royals',
-        '9U Twins',
-        '9U White Sox',
-        '9U Tigers',
-        '9U Indians',
-        '9U Rays',
-        '9U Blue Jays',
-        '9U Orioles'
-    ],
-    '10U': [
-        '10U Red Sox',
-        '10U Yankees',
-        '10U Dodgers',
-        '10U Giants',
-        '10U Braves',
-        '10U Cardinals',
-        '10U Cubs',
-        '10U Mets',
-        '10U Phillies',
-        '10U Nationals',
-        '10U Marlins',
-        '10U Pirates',
-        '10U Rockies',
-        '10U Diamondbacks',
-        '10U Padres',
-        '10U Brewers',
-        '10U Reds',
-        '10U Astros',
-        '10U Rangers',
-        '10U Angels',
-        '10U Athletics',
-        '10U Mariners',
-        '10U Royals',
-        '10U Twins',
-        '10U White Sox',
-        '10U Tigers',
-        '10U Indians',
-        '10U Rays',
-        '10U Blue Jays',
-        '10U Orioles'
-    ],
-    '11U': [
-        '11U Red Sox',
-        '11U Yankees',
-        '11U Dodgers',
-        '11U Giants',
-        '11U Braves',
-        '11U Cardinals',
-        '11U Cubs',
-        '11U Mets',
-        '11U Phillies',
-        '11U Nationals',
-        '11U Marlins',
-        '11U Pirates',
-        '11U Rockies',
-        '11U Diamondbacks',
-        '11U Padres',
-        '11U Brewers',
-        '11U Reds',
-        '11U Astros',
-        '11U Rangers',
-        '11U Angels',
-        '11U Athletics',
-        '11U Mariners',
-        '11U Royals',
-        '11U Twins',
-        '11U White Sox',
-        '11U Tigers',
-        '11U Indians',
-        '11U Rays',
-        '11U Blue Jays',
-        '11U Orioles'
-    ],
-    '12U': [
-        '12U Red Sox',
-        '12U Yankees',
-        '12U Dodgers',
-        '12U Giants',
-        '12U Braves',
-        '12U Cardinals',
-        '12U Cubs',
-        '12U Mets',
-        '12U Phillies',
-        '12U Nationals',
-        '12U Marlins',
-        '12U Pirates',
-        '12U Rockies',
-        '12U Diamondbacks',
-        '12U Padres',
-        '12U Brewers',
-        '12U Reds',
-        '12U Astros',
-        '12U Rangers',
-        '12U Angels',
-        '12U Athletics',
-        '12U Mariners',
-        '12U Royals',
-        '12U Twins',
-        '12U White Sox',
-        '12U Tigers',
-        '12U Indians',
-        '12U Rays',
-        '12U Blue Jays',
-        '12U Orioles'
-    ]
-};
+// USABL Teams will be loaded from usabl_teams.js
+let usablTeams = {};
 
 // Supported video formats
 const supportedVideoFormats = [
@@ -183,6 +54,30 @@ const sportPositions = {
 
 // Initialize the builder
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
+    console.log('window.usablTeams before loading:', window.usablTeams);
+    
+    // Load teams from the static usabl_teams.js file
+    if (typeof window.usablTeams !== 'undefined') {
+        usablTeams = window.usablTeams;
+        console.log('Loaded USABL teams from static file:', usablTeams);
+    } else {
+        console.log('Static USABL teams not found, using fallback');
+        // Add some fallback teams so the system works
+        usablTeams = {
+            '8U': ['USABL 8U Nationals', 'USABL 8U Eagles'],
+            '9U': ['USABL 9U Nationals', 'USABL 9U Eagles'],
+            '10U': ['USABL 10U Nationals', 'USABL 10U Eagles'],
+            '11U': ['USABL 11U Nationals', 'USABL 11U Eagles'],
+            '12U': ['USABL 12U Nationals', 'USABL 12U Eagles'],
+            '13U': ['USABL 13U Nationals', 'USABL 13U Eagles'],
+            '14U': ['USABL 14U Nationals', 'USABL 14U Eagles']
+        };
+    }
+    
+    loadCustomTeams(); // Load any custom teams from localStorage
+    console.log('Final usablTeams after loading custom teams:', usablTeams);
+    
     initializeBuilder();
     setupEventListeners();
     checkForTeamInvite();
@@ -340,19 +235,41 @@ function updateTeamOptions() {
     const birthdateInput = document.getElementById('birthdate');
     const currentTeamInput = document.getElementById('currentTeam');
     const teamDropdown = document.getElementById('team-dropdown');
-    if (!birthdateInput || !currentTeamInput || !teamDropdown) return;
+    
+    console.log('updateTeamOptions called');
+    console.log('birthdateInput:', birthdateInput);
+    console.log('currentTeamInput:', currentTeamInput);
+    console.log('teamDropdown:', teamDropdown);
+    console.log('usablTeams:', usablTeams);
+    
+    if (!birthdateInput || !currentTeamInput || !teamDropdown) {
+        console.log('Missing required elements, returning');
+        return;
+    }
+    
     const usablAge = calculateUSABLDivision(birthdateInput.value);
-    if (usablAge === null) return;
+    console.log('USABL age calculated:', usablAge);
+    
+    if (usablAge === null) {
+        console.log('No valid birthdate, returning');
+        return;
+    }
+    
     let ageGroup = '';
-    if (usablAge >= 9 && usablAge <= 12) {
+    if (usablAge >= 8 && usablAge <= 14) {
         ageGroup = usablAge + 'U';
+        console.log('Age group:', ageGroup);
     } else {
+        console.log('Age not in USABL range (8-14), hiding team selection');
         teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
         const teamSelectionContainer = document.getElementById('team-selection-container');
         if (teamSelectionContainer) teamSelectionContainer.classList.add('hidden');
         return;
     }
-    const teams = usablTeams[ageGroup] || [];
+    
+    const teams = getTeamsForAgeGroup(ageGroup);
+    console.log('Teams for age group', ageGroup, ':', teams);
+    
     teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
     teams.forEach(team => {
         const option = document.createElement('option');
@@ -360,9 +277,13 @@ function updateTeamOptions() {
         option.textContent = team;
         teamDropdown.appendChild(option);
     });
+    
     const teamSelectionContainer = document.getElementById('team-selection-container');
     if (teamSelectionContainer) {
         teamSelectionContainer.classList.remove('hidden');
+        console.log('Team selection container shown');
+    } else {
+        console.log('Team selection container not found');
     }
 }
 
@@ -641,7 +562,7 @@ function populateReviewContent() {
                     <p><strong>USABL Age (as of April 30):</strong> ${formData.age || 'Not specified'}</p>
                     <p><strong>Sport:</strong> ${formData.sport}</p>
                     <p><strong>Team:</strong> ${formData.currentTeam || 'Not specified'}</p>
-                    ${formData.age >= 9 && formData.age <= 12 ? `
+                    ${formData.age >= 8 && formData.age <= 14 ? `
                     <p><strong>USABL Age Group:</strong> ${formData.age}U</p>
                     ` : ''}
                     <p><strong>Positions:</strong> ${formData.positions.join(', ') || 'None selected'}</p>
@@ -1075,5 +996,128 @@ function showTeamInviteMessage(team) {
     if (firstStepContent) {
         const stepContent = firstStepContent.querySelector('.step-content') || firstStepContent;
         stepContent.insertBefore(messageDiv, stepContent.firstChild);
+    }
+}
+
+// Function to fetch USABL team names from their website
+async function fetchUSABLTeams() {
+    try {
+        // For now, we'll use placeholder teams until we can scrape the actual ones
+        // In a production environment, you would implement proper web scraping here
+        console.log('Fetching USABL teams from website...');
+        
+        // Placeholder for actual implementation
+        // const response = await fetch('https://www.usabl.com/api/teams');
+        // const teams = await response.json();
+        
+        // For now, return the current structure
+        return usablTeams;
+    } catch (error) {
+        console.error('Error fetching USABL teams:', error);
+        return usablTeams;
+    }
+}
+
+// Load custom teams from localStorage
+function loadCustomTeams() {
+    const savedTeams = localStorage.getItem('customUSABLTeams');
+    if (savedTeams) {
+        const customTeams = JSON.parse(savedTeams);
+        // Merge custom teams with existing teams
+        for (const ageGroup in customTeams) {
+            if (usablTeams[ageGroup]) {
+                usablTeams[ageGroup] = [...usablTeams[ageGroup], ...customTeams[ageGroup]];
+            }
+        }
+    }
+}
+
+// Function to add a custom team to the list
+function addCustomTeam(ageGroup, teamName) {
+    if (!usablTeams[ageGroup]) {
+        usablTeams[ageGroup] = [];
+    }
+    
+    const fullTeamName = `USABL ${ageGroup} ${teamName}`;
+    if (!usablTeams[ageGroup].includes(fullTeamName)) {
+        usablTeams[ageGroup].push(fullTeamName);
+        
+        // Save custom teams to localStorage
+        const customTeams = JSON.parse(localStorage.getItem('customUSABLTeams') || '{}');
+        if (!customTeams[ageGroup]) {
+            customTeams[ageGroup] = [];
+        }
+        customTeams[ageGroup].push(fullTeamName);
+        localStorage.setItem('customUSABLTeams', JSON.stringify(customTeams));
+        
+        // Update the dropdown if it's currently visible
+        updateTeamOptions();
+    }
+    
+    return fullTeamName;
+}
+
+// Function to get teams for a specific age group
+function getTeamsForAgeGroup(ageGroup) {
+    return usablTeams[ageGroup] || [];
+}
+
+function addCustomTeamToDropdown() {
+    const customTeamInput = document.getElementById('custom-team-name');
+    const birthdateInput = document.getElementById('birthdate');
+    
+    if (!customTeamInput || !birthdateInput) return;
+    
+    const teamName = customTeamInput.value.trim();
+    if (!teamName) {
+        alert('Please enter a team name');
+        return;
+    }
+    
+    const usablAge = calculateUSABLDivision(birthdateInput.value);
+    if (usablAge === null || usablAge < 8 || usablAge > 14) {
+        alert('Please enter a valid birthdate for USABL age 8-14');
+        return;
+    }
+    
+    const ageGroup = usablAge + 'U';
+    const fullTeamName = addCustomTeam(ageGroup, teamName);
+    
+    // Clear the input
+    customTeamInput.value = '';
+    
+    // Show success message
+    alert(`Team "${fullTeamName}" added successfully! You can now select it from the dropdown.`);
+    
+    // Update the dropdown to show the new team
+    updateTeamOptions();
+}
+
+// Function to refresh USABL teams from static file
+async function refreshUSABLTeams() {
+    const refreshButton = document.querySelector('button[onclick="refreshUSABLTeams()"]');
+    const originalText = refreshButton.innerHTML;
+    
+    try {
+        // Show loading state
+        refreshButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Loading...';
+        refreshButton.disabled = true;
+        
+        // Reload teams from static file
+        if (typeof window.usablTeams !== 'undefined') {
+            usablTeams = window.usablTeams;
+            loadCustomTeams(); // Reload custom teams
+            updateTeamOptions();
+            alert('USABL teams refreshed successfully!');
+        } else {
+            alert('Static USABL teams not found. Using fallback teams.');
+        }
+    } catch (error) {
+        console.error('Error refreshing teams:', error);
+        alert('Error refreshing teams. Using fallback teams.');
+    } finally {
+        // Restore button state
+        refreshButton.innerHTML = originalText;
+        refreshButton.disabled = false;
     }
 } 
