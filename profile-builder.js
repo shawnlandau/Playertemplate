@@ -62,30 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeBuilder() {
-    console.log('initializeBuilder called');
-    
     // Set up sport change listener
     const sportSelect = document.getElementById('sport');
-    console.log('sportSelect element found:', !!sportSelect);
     
     if (sportSelect) {
-        console.log('Adding change event listener to sport select');
         sportSelect.addEventListener('change', function() {
-            console.log('Sport changed to:', this.value);
             try {
                 updatePositions(this.value);
             } catch (error) {
                 console.error('Error in updatePositions:', error);
             }
         });
-        console.log('Event listener added successfully');
-    } else {
-        console.error('sportSelect element not found');
     }
 
     // Set up color selection listeners
     setupColorListeners();
-    console.log('initializeBuilder completed');
 }
 
 function setupEventListeners() {
@@ -161,22 +152,18 @@ function setupColorListeners() {
 
 function updateColorPreview() {
     // This function can be used to show a live preview of color changes
-    // For now, we'll just log the changes
+    // For now, we'll just keep it empty for future implementation
     const primaryColor = document.getElementById('primaryColor')?.value || 'blue';
     const secondaryColor = document.getElementById('secondaryColor')?.value || 'slate';
     const accentColor = document.getElementById('accentColor')?.value || 'blue-400';
     
-    console.log('Current color scheme:', { primaryColor, secondaryColor, accentColor });
+    // Future: Add live preview functionality here
 }
 
 function updatePositions(sport) {
-    console.log('updatePositions called with sport:', sport);
-    
     const positionsContainer = document.getElementById('positions-container');
-    console.log('positionsContainer found:', !!positionsContainer);
     
     if (!positionsContainer) {
-        console.error('positions-container element not found');
         return;
     }
     
@@ -185,17 +172,14 @@ function updatePositions(sport) {
     
     // Get positions for the selected sport
     const positions = sportPositions[sport] || [];
-    console.log('positions for', sport, ':', positions);
     
     if (positions.length === 0) {
-        console.log('No positions found for sport:', sport);
         positionsContainer.innerHTML = '<p class="text-gray-500 text-sm">No predefined positions for this sport. You can add custom positions below.</p>';
         return;
     }
     
     // Create position checkboxes
     positions.forEach((position, index) => {
-        console.log(`Creating position ${index + 1}: ${position}`);
         const div = document.createElement('div');
         div.className = 'flex items-center';
         div.innerHTML = `
@@ -206,8 +190,6 @@ function updatePositions(sport) {
         `;
         positionsContainer.appendChild(div);
     });
-    
-    console.log('Positions updated successfully. Total positions:', positionsContainer.children.length);
 }
 
 function addCustomPosition() {
@@ -936,23 +918,4 @@ function showTeamInviteMessage(team) {
         const stepContent = firstStepContent.querySelector('.step-content') || firstStepContent;
         stepContent.insertBefore(messageDiv, stepContent.firstChild);
     }
-}
-
-// Test function for debugging positions
-function testPositions() {
-    console.log('=== TESTING POSITIONS ===');
-    console.log('sportPositions object:', sportPositions);
-    console.log('Baseball positions:', sportPositions['Baseball']);
-    
-    const sportSelect = document.getElementById('sport');
-    console.log('Sport select element:', sportSelect);
-    
-    const positionsContainer = document.getElementById('positions-container');
-    console.log('Positions container element:', positionsContainer);
-    
-    // Test updating positions for Baseball
-    console.log('Testing updatePositions for Baseball...');
-    updatePositions('Baseball');
-    
-    console.log('=== END TEST ===');
 } 
