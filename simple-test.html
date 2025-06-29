@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        select, input { width: 100%; padding: 10px; margin: 10px 0; }
+        .position-item { margin: 5px 0; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Positions Test</h1>
+        
+        <div>
+            <label for="sport">Select Sport:</label>
+            <select id="sport">
+                <option value="">Choose a sport...</option>
+                <option value="Baseball">Baseball</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Soccer">Soccer</option>
+                <option value="Football">Football</option>
+            </select>
+        </div>
+        
+        <div>
+            <label>Positions:</label>
+            <div id="positions-container">
+                <p>Select a sport to see positions</p>
+            </div>
+        </div>
+        
+        <div class="debug" id="debug">
+            Debug info will appear here...
+        </div>
+    </div>
+
+    <script>
+        // Simple positions object
+        const positions = {
+            'Baseball': ['Pitcher', 'Catcher', 'First Base', 'Second Base', 'Third Base', 'Shortstop', 'Left Field', 'Center Field', 'Right Field'],
+            'Basketball': ['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center'],
+            'Soccer': ['Goalkeeper', 'Defender', 'Midfielder', 'Forward', 'Winger'],
+            'Football': ['Quarterback', 'Running Back', 'Wide Receiver', 'Tight End', 'Linebacker', 'Cornerback', 'Safety']
+        };
+
+        function log(message) {
+            console.log(message);
+            const debug = document.getElementById('debug');
+            debug.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+        }
+
+        function updatePositions(sport) {
+            log('updatePositions called with: ' + sport);
+            
+            const container = document.getElementById('positions-container');
+            log('Container found: ' + (container ? 'YES' : 'NO'));
+            
+            if (!container) {
+                log('ERROR: Container not found!');
+                return;
+            }
+            
+            // Clear container
+            container.innerHTML = '';
+            log('Container cleared');
+            
+            // Get positions for sport
+            const sportPositions = positions[sport] || [];
+            log('Positions found: ' + sportPositions.length);
+            log('Positions: ' + sportPositions.join(', '));
+            
+            if (sportPositions.length === 0) {
+                container.innerHTML = '<p>No positions for this sport</p>';
+                return;
+            }
+            
+            // Create position elements
+            sportPositions.forEach((pos, index) => {
+                log('Creating position ' + (index + 1) + ': ' + pos);
+                
+                const div = document.createElement('div');
+                div.className = 'position-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="pos-${index}" value="${pos}">
+                    <label for="pos-${index}">${pos}</label>
+                `;
+                
+                container.appendChild(div);
+                log('Position element added: ' + pos);
+            });
+            
+            log('Finished updating positions. Total elements: ' + container.children.length);
+        }
+
+        // Set up event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            log('DOM loaded');
+            
+            const sportSelect = document.getElementById('sport');
+            log('Sport select found: ' + (sportSelect ? 'YES' : 'NO'));
+            
+            if (sportSelect) {
+                sportSelect.addEventListener('change', function() {
+                    log('Sport changed to: ' + this.value);
+                    updatePositions(this.value);
+                });
+                log('Event listener added');
+            } else {
+                log('ERROR: Sport select not found!');
+            }
+        });
+    </script>
+</body>
+</html> 

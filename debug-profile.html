@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Profile Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="usabl_teams.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-8">Debug Profile Builder</h1>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold mb-6">Step 1: Basic Information</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                            First Name *
+                        </label>
+                        <input type="text" id="firstName" name="firstName" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            placeholder="Enter first name">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name *
+                        </label>
+                        <input type="text" id="lastName" name="lastName" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            placeholder="Enter last name">
+                    </div>
+                    <div>
+                        <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-2">
+                            Birth Date *
+                        </label>
+                        <input type="date" id="birthdate" name="birthdate" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            max="2016-12-31">
+                    </div>
+                    <div>
+                        <label for="sport" class="block text-sm font-medium text-gray-700 mb-2">
+                            Sport *
+                        </label>
+                        <select id="sport" name="sport" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                            <option value="">Select a sport</option>
+                            <option value="Baseball">Baseball</option>
+                            <option value="Basketball">Basketball</option>
+                            <option value="Football">Football</option>
+                            <option value="Hockey">Hockey</option>
+                            <option value="Lacrosse">Lacrosse</option>
+                            <option value="Other">Other</option>
+                            <option value="Soccer">Soccer</option>
+                            <option value="Swimming">Swimming</option>
+                            <option value="Tennis">Tennis</option>
+                            <option value="Track & Field">Track & Field</option>
+                            <option value="Volleyball">Volleyball</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="currentTeam" class="block text-sm font-medium text-gray-700 mb-2">
+                            Current Team
+                        </label>
+                        <input type="text" id="currentTeam" name="currentTeam"
+                            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            placeholder="e.g., The Daily Nine 12U">
+                        
+                        <!-- Simple USABL Team Selection -->
+                        <div id="simple-team-selection" class="hidden mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-baseball-ball text-blue-600 mr-2"></i>
+                                <h4 class="text-sm font-medium text-blue-800">Quick USABL Team Selection</h4>
+                            </div>
+                            <p class="text-xs text-blue-700 mb-3">Click a team to select it, or type your own team name above.</p>
+                            
+                            <div id="team-buttons" class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                <!-- Team buttons will be populated by JavaScript -->
+                            </div>
+                            
+                            <div class="mt-3 pt-3 border-t border-blue-200">
+                                <p class="text-xs text-blue-700 mb-2">Don't see your team? Type it above or add it here:</p>
+                                <div class="flex space-x-2">
+                                    <input type="text" id="custom-team-name" 
+                                        class="flex-1 px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                        placeholder="Enter your team name">
+                                    <button type="button" onclick="addCustomTeam()" 
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <label class="block text-sm font-medium text-gray-700 mb-4">
+                        Positions Played
+                    </label>
+                    <div id="positions-container" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <!-- Positions will be dynamically loaded based on sport -->
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex space-x-2">
+                            <input type="text" id="custom-position" placeholder="Enter custom position" 
+                                class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <button type="button" onclick="addCustomPosition()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                <i class="fas fa-plus mr-1"></i>Add Position
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-gray-100 p-4 rounded">
+                <h3 class="font-semibold mb-2">Debug Console:</h3>
+                <div id="debug-console" class="text-sm text-gray-600 bg-white p-3 rounded border max-h-40 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug logging function
+        function debugLog(message) {
+            console.log(message);
+            const debugConsole = document.getElementById('debug-console');
+            if (debugConsole) {
+                const timestamp = new Date().toLocaleTimeString();
+                debugConsole.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+                debugConsole.scrollTop = debugConsole.scrollHeight;
+            }
+        }
+
+        // Sport-specific positions
+        const sportPositions = {
+            'Baseball': ['Pitcher', 'Catcher', 'First Base', 'Second Base', 'Third Base', 'Shortstop', 'Left Field', 'Center Field', 'Right Field', 'Designated Hitter'],
+            'Basketball': ['Point Guard', 'Shooting Guard', 'Small Forward', 'Power Forward', 'Center'],
+            'Soccer': ['Goalkeeper', 'Defender', 'Midfielder', 'Forward', 'Winger'],
+            'Football': ['Quarterback', 'Running Back', 'Wide Receiver', 'Tight End', 'Offensive Line', 'Defensive Line', 'Linebacker', 'Cornerback', 'Safety', 'Kicker', 'Punter'],
+            'Tennis': ['Singles', 'Doubles'],
+            'Swimming': ['Freestyle', 'Backstroke', 'Breaststroke', 'Butterfly', 'Individual Medley', 'Relay'],
+            'Track & Field': ['Sprints', 'Distance', 'Hurdles', 'Jumps', 'Throws', 'Relay'],
+            'Volleyball': ['Setter', 'Outside Hitter', 'Middle Blocker', 'Opposite Hitter', 'Libero', 'Defensive Specialist'],
+            'Hockey': ['Goalie', 'Defenseman', 'Forward', 'Center', 'Winger'],
+            'Lacrosse': [
+                'Attack', 
+                'Midfielder', 
+                'Defense', 
+                'Goalie', 
+                'Face-off Specialist', 
+                'Long-stick Midfielder (LSM)',
+                'Short-stick Defensive Midfielder (SSDM)',
+                'Wing Midfielder',
+                'Defensive Midfielder',
+                'Offensive Midfielder',
+                'Box Lacrosse - Forward',
+                'Box Lacrosse - Transition',
+                'Box Lacrosse - Defense',
+                'Box Lacrosse - Goalie'
+            ],
+            'Other': []
+        };
+
+        // USABL Teams
+        let usablTeams = {};
+
+        function updatePositions(sport) {
+            debugLog(`updatePositions called with sport: ${sport}`);
+            const positionsContainer = document.getElementById('positions-container');
+            if (!positionsContainer) {
+                debugLog('ERROR: positions-container not found');
+                return;
+            }
+
+            positionsContainer.innerHTML = '';
+            
+            const positions = sportPositions[sport] || [];
+            debugLog(`Positions for ${sport}: ${positions.length} positions found`);
+            
+            if (positions.length === 0) {
+                positionsContainer.innerHTML = '<p class="text-gray-500 text-sm">No predefined positions for this sport. You can add custom positions below.</p>';
+                return;
+            }
+            
+            positions.forEach(position => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+                           name="positions" value="${position}" class="mr-3">
+                    <label for="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+                           class="text-sm text-gray-700">${position}</label>
+                `;
+                positionsContainer.appendChild(div);
+            });
+            
+            debugLog(`Positions updated for sport: ${sport}`);
+        }
+
+        function calculateUSABLDivision(birthdate) {
+            if (!birthdate) return null;
+            const now = new Date();
+            const cutoff = new Date(now.getFullYear(), 3, 30); // April 30th of current year
+            const birth = new Date(birthdate);
+            let age = cutoff.getFullYear() - birth.getFullYear();
+            const monthDiff = cutoff.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && cutoff.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function updateTeamOptions() {
+            debugLog('updateTeamOptions called');
+            const birthdateInput = document.getElementById('birthdate');
+            const currentTeamInput = document.getElementById('currentTeam');
+            const teamSelectionDiv = document.getElementById('simple-team-selection');
+            
+            if (!birthdateInput || !currentTeamInput || !teamSelectionDiv) {
+                debugLog('ERROR: Missing required elements');
+                return;
+            }
+            
+            const usablAge = calculateUSABLDivision(birthdateInput.value);
+            debugLog(`USABL age calculated: ${usablAge}`);
+            
+            if (usablAge === null) {
+                debugLog('No valid birthdate, hiding team selection');
+                teamSelectionDiv.classList.add('hidden');
+                return;
+            }
+            
+            let ageGroup = '';
+            if (usablAge >= 8 && usablAge <= 14) {
+                ageGroup = usablAge + 'U';
+                debugLog(`Age group: ${ageGroup}`);
+            } else {
+                debugLog('Age not in USABL range (8-14), hiding team selection');
+                teamSelectionDiv.classList.add('hidden');
+                return;
+            }
+            
+            const teams = usablTeams[ageGroup] || [];
+            debugLog(`Teams for age group ${ageGroup}: ${teams.length} teams`);
+            
+            const teamButtonsContainer = document.getElementById('team-buttons');
+            if (!teamButtonsContainer) {
+                debugLog('ERROR: team-buttons container not found');
+                return;
+            }
+            
+            teamButtonsContainer.innerHTML = '';
+            
+            if (teams.length === 0) {
+                teamButtonsContainer.innerHTML = '<p class="text-gray-500 text-sm col-span-2">No teams available for this age group.</p>';
+                teamSelectionDiv.classList.remove('hidden');
+                return;
+            }
+            
+            teams.forEach(team => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'px-3 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 hover:border-blue-500 transition-colors text-sm text-left';
+                button.textContent = team;
+                button.onclick = function() {
+                    debugLog(`Team button clicked: ${team}`);
+                    currentTeamInput.value = team;
+                    teamButtonsContainer.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('bg-blue-100', 'border-blue-500');
+                        btn.classList.add('bg-white', 'border-blue-300');
+                    });
+                    this.classList.remove('bg-white', 'border-blue-300');
+                    this.classList.add('bg-blue-100', 'border-blue-500');
+                };
+                teamButtonsContainer.appendChild(button);
+            });
+            
+            teamSelectionDiv.classList.remove('hidden');
+            debugLog(`Team selection shown with ${teams.length} teams`);
+        }
+
+        function addCustomTeam() {
+            const customTeamInput = document.getElementById('custom-team-name');
+            const currentTeamInput = document.getElementById('currentTeam');
+            
+            if (!customTeamInput || !currentTeamInput) {
+                debugLog('ERROR: Custom team input elements not found');
+                return;
+            }
+            
+            const teamName = customTeamInput.value.trim();
+            if (!teamName) {
+                alert('Please enter a team name');
+                return;
+            }
+            
+            currentTeamInput.value = teamName;
+            customTeamInput.value = '';
+            debugLog(`Custom team added: ${teamName}`);
+            alert(`Team "${teamName}" added successfully!`);
+        }
+
+        function addCustomPosition() {
+            const customPositionInput = document.getElementById('custom-position');
+            if (!customPositionInput) {
+                debugLog('ERROR: Custom position input not found');
+                return;
+            }
+            
+            const position = customPositionInput.value.trim();
+            if (!position) {
+                alert('Please enter a position name');
+                return;
+            }
+            
+            const positionsContainer = document.getElementById('positions-container');
+            if (!positionsContainer) {
+                debugLog('ERROR: Positions container not found');
+                return;
+            }
+            
+            const div = document.createElement('div');
+            div.className = 'flex items-center';
+            div.innerHTML = `
+                <input type="checkbox" id="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+                       name="positions" value="${position}" class="mr-3" checked>
+                <label for="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+                       class="text-sm text-gray-700">${position}</label>
+            `;
+            positionsContainer.appendChild(div);
+            customPositionInput.value = '';
+            
+            debugLog(`Custom position added: ${position}`);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('DOMContentLoaded event fired');
+            
+            // Load USABL teams
+            if (typeof window.usablTeams !== 'undefined') {
+                usablTeams = window.usablTeams;
+                debugLog('Loaded USABL teams from static file');
+            } else {
+                debugLog('Static USABL teams not found, using fallback');
+                usablTeams = {
+                    '8U': ['USABL 8U Nationals', 'USABL 8U Eagles'],
+                    '9U': ['USABL 9U Nationals', 'USABL 9U Eagles'],
+                    '10U': ['USABL 10U Nationals', 'USABL 10U Eagles'],
+                    '11U': ['USABL 11U Nationals', 'USABL 11U Eagles'],
+                    '12U': ['USABL 12U Nationals', 'USABL 12U Eagles'],
+                    '13U': ['USABL 13U Nationals', 'USABL 13U Eagles'],
+                    '14U': ['USABL 14U Nationals', 'USABL 14U Eagles']
+                };
+            }
+            
+            // Set up event listeners
+            const sportSelect = document.getElementById('sport');
+            debugLog(`sportSelect element: ${sportSelect ? 'found' : 'not found'}`);
+            if (sportSelect) {
+                sportSelect.addEventListener('change', function() {
+                    debugLog(`Sport changed to: ${this.value}`);
+                    updatePositions(this.value);
+                });
+                debugLog('Event listener added to sport select');
+            }
+
+            const birthdateInput = document.getElementById('birthdate');
+            debugLog(`birthdateInput element: ${birthdateInput ? 'found' : 'not found'}`);
+            if (birthdateInput) {
+                birthdateInput.addEventListener('input', function() {
+                    debugLog(`Birthdate changed to: ${this.value}`);
+                    updateTeamOptions();
+                });
+                debugLog('Event listener added to birthdate input');
+            }
+            
+            debugLog('Initialization complete');
+        });
+    </script>
+</body>
+</html> 

@@ -1,12 +1,10 @@
 // Profile Builder JavaScript
+
 let currentStep = 1;
 let totalSteps = 5;
 let profileData = {};
 let uploadedImageData = null; // Store uploaded image data
 let uploadedVideos = []; // Store uploaded video data
-
-// USABL Teams will be loaded from usabl_teams.js
-let usablTeams = {};
 
 // Supported video formats
 const supportedVideoFormats = [
@@ -54,53 +52,25 @@ const sportPositions = {
 
 // Initialize the builder
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOMContentLoaded event fired');
-    console.log('window.usablTeams before loading:', window.usablTeams);
-    
-    // Load teams from the static usabl_teams.js file
-    if (typeof window.usablTeams !== 'undefined') {
-        usablTeams = window.usablTeams;
-        console.log('Loaded USABL teams from static file:', usablTeams);
-    } else {
-        console.log('Static USABL teams not found, using fallback');
-        // Add some fallback teams so the system works
-        usablTeams = {
-            '8U': ['USABL 8U Nationals', 'USABL 8U Eagles'],
-            '9U': ['USABL 9U Nationals', 'USABL 9U Eagles'],
-            '10U': ['USABL 10U Nationals', 'USABL 10U Eagles'],
-            '11U': ['USABL 11U Nationals', 'USABL 11U Eagles'],
-            '12U': ['USABL 12U Nationals', 'USABL 12U Eagles'],
-            '13U': ['USABL 13U Nationals', 'USABL 13U Eagles'],
-            '14U': ['USABL 14U Nationals', 'USABL 14U Eagles']
-        };
+    try {
+        initializeBuilder();
+        setupEventListeners();
+        checkForTeamInvite();
+    } catch (error) {
+        console.error('Error during initialization:', error);
     }
-    
-    loadCustomTeams(); // Load any custom teams from localStorage
-    console.log('Final usablTeams after loading custom teams:', usablTeams);
-    
-    initializeBuilder();
-    setupEventListeners();
-    checkForTeamInvite();
 });
 
 function initializeBuilder() {
     // Set up sport change listener
     const sportSelect = document.getElementById('sport');
-    console.log('sportSelect element:', sportSelect);
     if (sportSelect) {
         sportSelect.addEventListener('change', function() {
-            console.log('Sport changed to:', this.value);
-            updatePositions(this.value);
-        });
-    } else {
-        console.log('sportSelect element not found');
-    }
-
-    // Set up birthdate change listener for team options
-    const birthdateInput = document.getElementById('birthdate');
-    if (birthdateInput) {
-        birthdateInput.addEventListener('input', function() {
-            updateTeamOptions();
+            try {
+                updatePositions(this.value);
+            } catch (error) {
+                console.error('Error in updatePositions:', error);
+            }
         });
     }
 
@@ -152,21 +122,18 @@ function setupColorListeners() {
     
     if (primaryColorSelect) {
         primaryColorSelect.addEventListener('change', function() {
-            console.log('Primary color changed to:', this.value);
             updateColorPreview();
         });
     }
     
     if (secondaryColorSelect) {
         secondaryColorSelect.addEventListener('change', function() {
-            console.log('Secondary color changed to:', this.value);
             updateColorPreview();
         });
     }
     
     if (accentColorSelect) {
         accentColorSelect.addEventListener('change', function() {
-            console.log('Accent color changed to:', this.value);
             updateColorPreview();
         });
     }
@@ -193,18 +160,18 @@ function updateColorPreview() {
 }
 
 function updatePositions(sport) {
-    console.log('updatePositions called with sport:', sport);
     const positionsContainer = document.getElementById('positions-container');
     if (!positionsContainer) {
-        console.log('positions-container not found');
         return;
     }
-
+    
+    // Clear existing positions
     positionsContainer.innerHTML = '';
     
+    // Get positions for the selected sport
     const positions = sportPositions[sport] || [];
-    console.log('positions for', sport, ':', positions);
     
+    // Create position checkboxes
     positions.forEach(position => {
         const div = document.createElement('div');
         div.className = 'flex items-center';
@@ -218,94 +185,33 @@ function updatePositions(sport) {
     });
 }
 
-function calculateUSABLDivision(birthdate) {
-    if (!birthdate) return null;
-    const now = new Date();
-    const cutoff = new Date(now.getFullYear(), 3, 30); // April 30th of current year
-    const birth = new Date(birthdate);
-    let age = cutoff.getFullYear() - birth.getFullYear();
-    const monthDiff = cutoff.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && cutoff.getDate() < birth.getDate())) {
-        age--;
-    }
-    return age;
-}
-
-function updateTeamOptions() {
-    const birthdateInput = document.getElementById('birthdate');
-    const currentTeamInput = document.getElementById('currentTeam');
-    const teamDropdown = document.getElementById('team-dropdown');
-    
-    console.log('updateTeamOptions called');
-    console.log('birthdateInput:', birthdateInput);
-    console.log('currentTeamInput:', currentTeamInput);
-    console.log('teamDropdown:', teamDropdown);
-    console.log('usablTeams:', usablTeams);
-    
-    if (!birthdateInput || !currentTeamInput || !teamDropdown) {
-        console.log('Missing required elements, returning');
+function addCustomPosition() {
+    const customPositionInput = document.getElementById('custom-position');
+    if (!customPositionInput) {
         return;
     }
     
-    const usablAge = calculateUSABLDivision(birthdateInput.value);
-    console.log('USABL age calculated:', usablAge);
-    
-    if (usablAge === null) {
-        console.log('No valid birthdate, returning');
+    const position = customPositionInput.value.trim();
+    if (!position) {
+        alert('Please enter a position name');
         return;
     }
     
-    let ageGroup = '';
-    if (usablAge >= 8 && usablAge <= 14) {
-        ageGroup = usablAge + 'U';
-        console.log('Age group:', ageGroup);
-    } else {
-        console.log('Age not in USABL range (8-14), hiding team selection');
-        teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
-        const teamSelectionContainer = document.getElementById('team-selection-container');
-        if (teamSelectionContainer) teamSelectionContainer.classList.add('hidden');
+    const positionsContainer = document.getElementById('positions-container');
+    if (!positionsContainer) {
         return;
     }
     
-    const teams = getTeamsForAgeGroup(ageGroup);
-    console.log('Teams for age group', ageGroup, ':', teams);
-    
-    teamDropdown.innerHTML = '<option value="">Select a USABL team (if applicable)</option>';
-    teams.forEach(team => {
-        const option = document.createElement('option');
-        option.value = team;
-        option.textContent = team;
-        teamDropdown.appendChild(option);
-    });
-    
-    const teamSelectionContainer = document.getElementById('team-selection-container');
-    if (teamSelectionContainer) {
-        teamSelectionContainer.classList.remove('hidden');
-        console.log('Team selection container shown');
-    } else {
-        console.log('Team selection container not found');
-    }
-}
-
-function selectTeamFromDropdown() {
-    const teamDropdown = document.getElementById('team-dropdown');
-    const currentTeamInput = document.getElementById('currentTeam');
-    
-    if (teamDropdown && currentTeamInput) {
-        currentTeamInput.value = teamDropdown.value;
-    }
-}
-
-function clearTeamSelection() {
-    const currentTeamInput = document.getElementById('currentTeam');
-    const teamDropdown = document.getElementById('team-dropdown');
-    
-    if (currentTeamInput) {
-        currentTeamInput.value = '';
-    }
-    if (teamDropdown) {
-        teamDropdown.value = '';
-    }
+    const div = document.createElement('div');
+    div.className = 'flex items-center';
+    div.innerHTML = `
+        <input type="checkbox" id="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+               name="positions" value="${position}" class="mr-3" checked>
+        <label for="pos-${position.replace(/\s+/g, '-').toLowerCase()}" 
+               class="text-sm text-gray-700">${position}</label>
+    `;
+    positionsContainer.appendChild(div);
+    customPositionInput.value = '';
 }
 
 function addCustomValue() {
@@ -559,12 +465,9 @@ function populateReviewContent() {
                 <div class="space-y-2 text-sm">
                     <p><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
                     <p><strong>Birth Date:</strong> ${formData.birthdate ? new Date(formData.birthdate).toLocaleDateString() : 'Not specified'}</p>
-                    <p><strong>USABL Age (as of April 30):</strong> ${formData.age || 'Not specified'}</p>
+                    <p><strong>Age:</strong> ${formData.age || 'Not specified'}</p>
                     <p><strong>Sport:</strong> ${formData.sport}</p>
                     <p><strong>Team:</strong> ${formData.currentTeam || 'Not specified'}</p>
-                    ${formData.age >= 8 && formData.age <= 14 ? `
-                    <p><strong>USABL Age Group:</strong> ${formData.age}U</p>
-                    ` : ''}
                     <p><strong>Positions:</strong> ${formData.positions.join(', ') || 'None selected'}</p>
                 </div>
             </div>
@@ -651,13 +554,24 @@ function populateReviewContent() {
 
 function collectFormData() {
     const birthdate = document.getElementById('birthdate').value;
-    const calculatedAge = calculateUSABLDivision(birthdate);
+    
+    // Calculate regular age
+    let age = null;
+    if (birthdate) {
+        const today = new Date();
+        const birth = new Date(birthdate);
+        age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+    }
     
     const formData = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
         birthdate: birthdate,
-        age: calculatedAge,
+        age: age,
         sport: document.getElementById('sport').value,
         currentTeam: document.getElementById('currentTeam').value,
         positions: Array.from(document.querySelectorAll('input[name="positions"]:checked')).map(cb => cb.value),
@@ -996,128 +910,5 @@ function showTeamInviteMessage(team) {
     if (firstStepContent) {
         const stepContent = firstStepContent.querySelector('.step-content') || firstStepContent;
         stepContent.insertBefore(messageDiv, stepContent.firstChild);
-    }
-}
-
-// Function to fetch USABL team names from their website
-async function fetchUSABLTeams() {
-    try {
-        // For now, we'll use placeholder teams until we can scrape the actual ones
-        // In a production environment, you would implement proper web scraping here
-        console.log('Fetching USABL teams from website...');
-        
-        // Placeholder for actual implementation
-        // const response = await fetch('https://www.usabl.com/api/teams');
-        // const teams = await response.json();
-        
-        // For now, return the current structure
-        return usablTeams;
-    } catch (error) {
-        console.error('Error fetching USABL teams:', error);
-        return usablTeams;
-    }
-}
-
-// Load custom teams from localStorage
-function loadCustomTeams() {
-    const savedTeams = localStorage.getItem('customUSABLTeams');
-    if (savedTeams) {
-        const customTeams = JSON.parse(savedTeams);
-        // Merge custom teams with existing teams
-        for (const ageGroup in customTeams) {
-            if (usablTeams[ageGroup]) {
-                usablTeams[ageGroup] = [...usablTeams[ageGroup], ...customTeams[ageGroup]];
-            }
-        }
-    }
-}
-
-// Function to add a custom team to the list
-function addCustomTeam(ageGroup, teamName) {
-    if (!usablTeams[ageGroup]) {
-        usablTeams[ageGroup] = [];
-    }
-    
-    const fullTeamName = `USABL ${ageGroup} ${teamName}`;
-    if (!usablTeams[ageGroup].includes(fullTeamName)) {
-        usablTeams[ageGroup].push(fullTeamName);
-        
-        // Save custom teams to localStorage
-        const customTeams = JSON.parse(localStorage.getItem('customUSABLTeams') || '{}');
-        if (!customTeams[ageGroup]) {
-            customTeams[ageGroup] = [];
-        }
-        customTeams[ageGroup].push(fullTeamName);
-        localStorage.setItem('customUSABLTeams', JSON.stringify(customTeams));
-        
-        // Update the dropdown if it's currently visible
-        updateTeamOptions();
-    }
-    
-    return fullTeamName;
-}
-
-// Function to get teams for a specific age group
-function getTeamsForAgeGroup(ageGroup) {
-    return usablTeams[ageGroup] || [];
-}
-
-function addCustomTeamToDropdown() {
-    const customTeamInput = document.getElementById('custom-team-name');
-    const birthdateInput = document.getElementById('birthdate');
-    
-    if (!customTeamInput || !birthdateInput) return;
-    
-    const teamName = customTeamInput.value.trim();
-    if (!teamName) {
-        alert('Please enter a team name');
-        return;
-    }
-    
-    const usablAge = calculateUSABLDivision(birthdateInput.value);
-    if (usablAge === null || usablAge < 8 || usablAge > 14) {
-        alert('Please enter a valid birthdate for USABL age 8-14');
-        return;
-    }
-    
-    const ageGroup = usablAge + 'U';
-    const fullTeamName = addCustomTeam(ageGroup, teamName);
-    
-    // Clear the input
-    customTeamInput.value = '';
-    
-    // Show success message
-    alert(`Team "${fullTeamName}" added successfully! You can now select it from the dropdown.`);
-    
-    // Update the dropdown to show the new team
-    updateTeamOptions();
-}
-
-// Function to refresh USABL teams from static file
-async function refreshUSABLTeams() {
-    const refreshButton = document.querySelector('button[onclick="refreshUSABLTeams()"]');
-    const originalText = refreshButton.innerHTML;
-    
-    try {
-        // Show loading state
-        refreshButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Loading...';
-        refreshButton.disabled = true;
-        
-        // Reload teams from static file
-        if (typeof window.usablTeams !== 'undefined') {
-            usablTeams = window.usablTeams;
-            loadCustomTeams(); // Reload custom teams
-            updateTeamOptions();
-            alert('USABL teams refreshed successfully!');
-        } else {
-            alert('Static USABL teams not found. Using fallback teams.');
-        }
-    } catch (error) {
-        console.error('Error refreshing teams:', error);
-        alert('Error refreshing teams. Using fallback teams.');
-    } finally {
-        // Restore button state
-        refreshButton.innerHTML = originalText;
-        refreshButton.disabled = false;
     }
 } 

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Selection Test</title>
+    <script src="usabl_teams.js"></script>
+    <script src="profile-builder.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        input, select { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Team Selection Debug Test</h1>
+        
+        <div class="test-section info">
+            <h3>Step 1: Check if teams are loaded</h3>
+            <button onclick="checkTeams()">Check Teams</button>
+            <div id="teams-status"></div>
+        </div>
+        
+        <div class="test-section info">
+            <h3>Step 2: Test birthdate calculation</h3>
+            <input type="date" id="test-birthdate" value="2012-06-15">
+            <button onclick="testBirthdate()">Calculate Age</button>
+            <div id="age-result"></div>
+        </div>
+        
+        <div class="test-section info">
+            <h3>Step 3: Test team dropdown</h3>
+            <input type="date" id="birthdate" value="2012-06-15">
+            <button onclick="testTeamDropdown()">Update Team Options</button>
+            <div id="team-dropdown-container">
+                <select id="team-dropdown">
+                    <option value="">Select a USABL team (if applicable)</option>
+                </select>
+            </div>
+            <div id="dropdown-status"></div>
+        </div>
+        
+        <div class="test-section info">
+            <h3>Step 4: Console Logs</h3>
+            <button onclick="clearConsole()">Clear Console</button>
+            <p>Open browser console (F12) to see detailed logs</p>
+        </div>
+    </div>
+
+    <script>
+        function checkTeams() {
+            const statusDiv = document.getElementById('teams-status');
+            
+            if (typeof window.usablTeams !== 'undefined') {
+                statusDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✅ Teams loaded successfully!</strong><br>
+                        Available age groups: ${Object.keys(window.usablTeams).join(', ')}<br>
+                        12U teams: ${window.usablTeams['12U'] ? window.usablTeams['12U'].length : 0} teams
+                    </div>
+                `;
+                console.log('Teams loaded:', window.usablTeams);
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Teams not loaded!</strong><br>
+                        window.usablTeams is undefined
+                    </div>
+                `;
+                console.error('Teams not loaded');
+            }
+        }
+        
+        function testBirthdate() {
+            const birthdate = document.getElementById('test-birthdate').value;
+            const age = calculateUSABLDivision(birthdate);
+            const resultDiv = document.getElementById('age-result');
+            
+            resultDiv.innerHTML = `
+                <div class="info">
+                    <strong>Birthdate:</strong> ${birthdate}<br>
+                    <strong>USABL Age:</strong> ${age}<br>
+                    <strong>Age Group:</strong> ${age ? age + 'U' : 'N/A'}
+                </div>
+            `;
+            console.log('Birthdate test:', { birthdate, age, ageGroup: age ? age + 'U' : 'N/A' });
+        }
+        
+        function testTeamDropdown() {
+            const birthdate = document.getElementById('birthdate').value;
+            const statusDiv = document.getElementById('dropdown-status');
+            
+            console.log('Testing team dropdown with birthdate:', birthdate);
+            
+            // Call the updateTeamOptions function
+            updateTeamOptions();
+            
+            // Check if teams were populated
+            const dropdown = document.getElementById('team-dropdown');
+            const options = dropdown.options;
+            
+            statusDiv.innerHTML = `
+                <div class="info">
+                    <strong>Dropdown Options:</strong> ${options.length}<br>
+                    <strong>Teams Found:</strong> ${options.length > 1 ? 'Yes' : 'No'}
+                </div>
+            `;
+            
+            console.log('Dropdown options:', options.length);
+            for (let i = 0; i < options.length; i++) {
+                console.log(`Option ${i}:`, options[i].text);
+            }
+        }
+        
+        function clearConsole() {
+            console.clear();
+            console.log('Console cleared');
+        }
+        
+        // Auto-run tests when page loads
+        window.addEventListener('load', function() {
+            console.log('Test page loaded');
+            setTimeout(checkTeams, 1000); // Check teams after a short delay
+        });
+    </script>
+</body>
+</html> 
